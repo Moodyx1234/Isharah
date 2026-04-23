@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\" --yes)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\" --yes --name isharah)",
+      "Bash(npx --yes create-next-app@latest isharah-app --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\" --yes)",
+      "Bash(mv isharah-app/* .)",
+      "Bash(mv isharah-app/.* .)",
+      "Bash(rmdir isharah-app *)",
+      "Bash(npm install *)",
+      "Bash(npx shadcn@latest init --yes --base-color slate --css-variables)",
+      "Bash(npx shadcn@latest init -y)",
+      "Bash(npx shadcn@latest init)",
+      "Bash(npx tsc *)",
+      "Bash(node server.js)",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(curl -s -L \"http://localhost:3000/ar\" -o /dev/null -w \"%{http_code}\")",
+      "Bash(curl -s \"http://localhost:3000/ar\")",
+      "Bash(curl -s \"http://localhost:3000/ar\" -o /dev/null -w \"%{http_code}\")",
+      "Bash(python3 -c \"import sys,json; data=json.loads\\(sys.stdin.read\\(\\)[sys.stdin.read\\(\\).find\\('{'\\):] if '{' in sys.stdin.read\\(\\) else '{}'\\); print\\(data.get\\('err',{}\\).get\\('message',''\\)[:500]\\)\")",
+      "Bash(curl -s \"http://localhost:3000/en\" -o /dev/null -w \"%{http_code}\")",
+      "Bash(curl -s http://localhost:3000__TRACKED_VAR__ -o /dev/null -w '%{http_code}')",
+      "Bash(curl -s -X POST http://localhost:3000/api/rephrase-for-sign -H 'Content-Type: application/json' -d '{\"text\":\"مرحباً، اليوم سنتحدث عن الخوارزميات\",\"locale\":\"ar\"}')",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s -X POST http://localhost:3000/api/rephrase-for-sign -H 'Content-Type: application/json' -d '{\"text\":\"hello today\",\"locale\":\"en\"}')",
+      "Bash(curl -s \"http://localhost:3000/\" -o /dev/null -w \"%{http_code}\")",
+      "Bash(pkill -f \"node server.js\")",
+      "Bash(curl -s -X POST http://localhost:3000/api/rephrase-for-sign -H \"Content-Type: application/json\" -d '{\"text\":\"مرحباً طالب اليوم\",\"locale\":\"ar\"}')",
+      "Bash(curl -s -X POST http://localhost:3000/api/summarize -H \"Content-Type: application/json\" -d '{\"transcript\":[],\"locale\":\"ar\"}')",
+      "Bash(grep -v \"^$\")"
+    ]
+  }
+}
