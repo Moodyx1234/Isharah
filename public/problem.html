@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>المشكلة | إشارة</title>
+  <meta name="description" content="أكثر من 2.7 مليون شخص من ذوي الإعاقة في السعودية يواجهون حواجز في التعليم الجامعي" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=IBM+Plex+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="/ar" class="nav-logo">
+      <div class="logo-icon">إ</div>
+      <div><div class="logo-name">إشارة</div><div class="logo-sub">Isharah</div></div>
+    </a>
+    <div class="nav-links">
+      <a href="/ar" class="nav-link">الرئيسية</a>
+      <a href="/problem.html" class="nav-link active">المشكلة</a>
+      <a href="/solution.html" class="nav-link">الحل</a>
+      <a href="/how-it-works.html" class="nav-link">كيف يعمل</a>
+      <a href="/team.html" class="nav-link">الفريق</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <a href="/ar/login" class="btn-p btn-sm">ابدأ الآن</a>
+      <button class="nav-burger" onclick="toggleMenu()" aria-label="القائمة">☰</button>
+    </div>
+  </div>
+  <div class="nav-mobile" id="mobile-menu">
+    <a href="/ar" class="nav-link">الرئيسية</a>
+    <a href="/problem.html" class="nav-link">المشكلة</a>
+    <a href="/solution.html" class="nav-link">الحل</a>
+    <a href="/how-it-works.html" class="nav-link">كيف يعمل</a>
+    <a href="/team.html" class="nav-link">الفريق</a>
+    <a href="/ar/login" class="btn-p btn-sm" style="margin-top:8px;width:fit-content;">ابدأ الآن</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="min-height:100vh;position:relative;overflow:hidden;padding-top:90px;">
+  <div class="blob-bg">
+    <div class="blob blob-1" style="top:-15%;right:-8%;width:min(65vw,700px);height:min(65vw,700px);background:radial-gradient(ellipse,rgba(0,201,167,.15) 0%,transparent 68%);"></div>
+    <div class="blob blob-2" style="bottom:-20%;left:-10%;width:min(60vw,650px);height:min(60vw,650px);background:radial-gradient(ellipse,rgba(20,80,200,.1) 0%,transparent 68%);"></div>
+    <div class="blob blob-3" style="top:30%;left:15%;width:min(40vw,420px);height:min(40vw,420px);background:radial-gradient(ellipse,rgba(245,166,35,.07) 0%,transparent 70%);"></div>
+  </div>
+  <div class="grid-tex"></div>
+  <div class="con" style="position:relative;z-index:1;">
+    <div class="hero-badge reveal">لماذا إشارة؟</div>
+    <h1 class="hero-title reveal d1">مشكلة حقيقية، يعانيها الملايين</h1>
+    <p class="hero-sub reveal d2">الإتاحة التعليمية ليست رفاهية — إنها حق</p>
+    <p class="hero-desc reveal d3">يواجه الطلاب من ذوي الإعاقة السمعية والبصرية في الجامعات السعودية فجوة حادة في الوصول إلى المحتوى التعليمي بشكل متكافئ.</p>
+    <div class="hero-ctas reveal d3">
+      <a href="/solution.html" class="btn-p">اكتشف الحل</a>
+    </div>
+    <a href="#stats" class="scroll-down reveal d4" aria-label="التمرير للأسفل">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </a>
+  </div>
+</section>
+
+<!-- SECTION 1 — الأرقام لا تكذب -->
+<section class="alt" id="stats">
+  <div class="con">
+    <div class="sec-head reveal">
+      <span class="stag">الأرقام</span>
+      <h2>واقع يطالب بالتغيير</h2>
+    </div>
+    <div class="stats-row">
+
+      <!-- Card 1 -->
+      <div class="card reveal d1">
+        <div class="ibox ibox-t">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
+        <div class="stat-num" style="color:var(--teal);" data-count="2.7" data-dec="1" data-suf="+">2.7+</div>
+        <div style="font-size:1.15rem;font-weight:700;margin-bottom:6px;">مليون</div>
+        <p style="color:var(--muted);font-size:.93rem;margin:0;">فرد من ذوي الإعاقة السمعية والبصرية في المملكة</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card reveal d2">
+        <div class="ibox ibox-r">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+          </svg>
+        </div>
+        <div class="stat-num" style="color:var(--red);">صفر</div>
+        <div style="font-size:1.15rem;font-weight:700;margin-bottom:6px;">أدوات إتاحة</div>
+        <p style="color:var(--muted);font-size:.93rem;margin:0;">متخصصة متوفرة في الجامعات السعودية حالياً</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card reveal d3">
+        <div class="ibox ibox-a">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+        </div>
+        <div class="stat-num" style="color:var(--amber);" data-count="30" data-pre="+">+30</div>
+        <div style="font-size:1.15rem;font-weight:700;margin-bottom:6px;">جامعة سعودية</div>
+        <p style="color:var(--muted);font-size:.93rem;margin:0;">تفتقر إلى حلول إتاحة فعّالة وشاملة</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2 — التفاصيل -->
+<section>
+  <div class="con">
+    <div class="sec-head reveal">
+      <span class="stag">التشخيص</span>
+      <h2>فجوتان متداخلتان تحتاجان حلاً واحداً</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;" class="two-col-grid">
+
+      <!-- Card A — الطلاب الصم -->
+      <div class="card-teal card reveal">
+        <div class="ibox ibox-t">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+          </svg>
+        </div>
+        <h3 style="margin:16px 0 10px;">الطلاب الصم</h3>
+        <p style="color:var(--muted);font-size:.95rem;line-height:1.75;margin-bottom:14px;">لا توجد ترجمة لغة إشارة آنية في المحاضرات الجامعية السعودية. يُجبر الطلاب الصم على الاعتماد على مترجمين بشريين غير متاحين دائماً، أو المحاضرات المسجلة التي تفتقر للترجمة.</p>
+        <ul style="color:var(--muted);font-size:.93rem;line-height:2;padding-right:18px;margin-bottom:18px;">
+          <li>غياب الترجمة الآنية</li>
+          <li>شُح المترجمين المعتمدين</li>
+          <li>عدم توفر ترجمة للمحتوى البصري</li>
+        </ul>
+        <div class="tags" style="display:flex;flex-wrap:wrap;gap:8px;">
+          <span class="pill-t">مشكلة بنيوية</span>
+          <span class="pill-t">فجوة رقمية</span>
+          <span class="pill-t">عائق أكاديمي</span>
+        </div>
+      </div>
+
+      <!-- Card B — الطلاب المكفوفون -->
+      <div class="card-amber card reveal d1">
+        <div class="ibox ibox-a">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+          </svg>
+        </div>
+        <h3 style="margin:16px 0 10px;">الطلاب المكفوفون</h3>
+        <p style="color:var(--muted);font-size:.95rem;line-height:1.75;margin-bottom:14px;">المحاضرات تعتمد بشكل كبير على الشرائح والمحتوى البصري. الطلاب المكفوفون يفقدون جزءاً جوهرياً من المادة العلمية دون وجود أداة ذكية لوصف المحتوى صوتياً.</p>
+        <ul style="color:var(--muted);font-size:.93rem;line-height:2;padding-right:18px;margin-bottom:18px;">
+          <li>اعتماد الشرائح على الصور</li>
+          <li>غياب الوصف الصوتي التلقائي</li>
+          <li>لا ملخصات ذكية متاحة</li>
+        </ul>
+        <div class="tags" style="display:flex;flex-wrap:wrap;gap:8px;">
+          <span class="pill-a">تحدٍّ تقني</span>
+          <span class="pill-a">إقصاء رقمي</span>
+          <span class="pill-a">ضرورة إنسانية</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3 — المقارنة -->
+<section class="alt">
+  <div class="con">
+    <div class="sec-head reveal">
+      <span class="stag">المقارنة</span>
+      <h2>الواقع الحالي مقابل ما يمكن أن يكون</h2>
+    </div>
+    <div class="compare-grid reveal d1">
+
+      <div class="col-now">
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:20px;text-align:center;">الواقع الحالي 😔</div>
+        <div class="compare-item">
+          <span class="compare-icon" style="color:var(--red);font-weight:900;font-size:1.1rem;">✕</span>
+          <span>لا ترجمة فورية لغة إشارة</span>
+        </div>
+        <div class="compare-item">
+          <span class="compare-icon" style="color:var(--red);font-weight:900;font-size:1.1rem;">✕</span>
+          <span>لا وصف صوتي للشرائح</span>
+        </div>
+        <div class="compare-item">
+          <span class="compare-icon" style="color:var(--red);font-weight:900;font-size:1.1rem;">✕</span>
+          <span>اعتماد كامل على مترجمين بشريين</span>
+        </div>
+        <div class="compare-item">
+          <span class="compare-icon" style="color:var(--red);font-weight:900;font-size:1.1rem;">✕</span>
+          <span>فقدان جزء كبير من المحتوى</span>
+        </div>
+        <div class="compare-item">
+          <span class="compare-icon" style="color:var(--red);font-weight:900;font-size:1.1rem;">✕</span>
+          <span>شعور بالإقصاء والعزلة</span>
+        </div>
+      </div>
+
+      <div class="col-after">
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:20px;text-align:center;">مع إشارة ✨</div>
+        <div class="compare-item">
+          <span class="compare-icon" style="color:var(--teal);font-weight:900;font-size:1.1rem;">✓</span>
+          <span>ترجمة لغة إشارة ثلاثية الأبعاد آنية</span>
+        </div>
+        <div class="compare-item">
+          <span class="compare-icon" style="color:var(--teal);font-weight:900;font-size:1.1rem;">✓</span>
+          <span>وصف صوتي ذكي للمحتوى البصري</span>
+        </div>
+        <div class="compare-item">
+          <span class="compare-icon" style="color:var(--teal);font-weight:900;font-size:1.1rem;">✓</span>
+          <span>استقلالية تامة للطالب</span>
+        </div>
+        <div class="compare-item">
+          <span class="compare-icon" style="color:var(--teal);font-weight:900;font-size:1.1rem;">✓</span>
+          <span>تجربة تعليمية متكاملة</span>
+        </div>
+        <div class="compare-item">
+          <span class="compare-icon" style="color:var(--teal);font-weight:900;font-size:1.1rem;">✓</span>
+          <span>انتماء حقيقي وتكافؤ فرص</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4 — شهادة -->
+<section>
+  <div class="con">
+    <div class="pull-quote reveal">
+      <div class="pull-mark">❝</div>
+      <p class="pull-text">كنت أجلس في القاعة وأرى الشرائح تتعاقب دون أن أفهم نصفها. أتمنى لو كان هناك شيء يُترجم ما يحدث أمامي — لا لأكون أفضل، بل لأكون مساوياً للآخرين.</p>
+      <cite class="pull-cite">— طالب أصم، كلية الحاسب الآلي</cite>
+    </div>
+    <div style="text-align:center;margin-top:48px;" class="reveal d1">
+      <a href="/solution.html" class="btn-p">تعرّف على الحل الذي بنيناه</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="con">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/ar" style="display:flex;align-items:center;gap:10px;"><div class="logo-icon">إ</div><span style="font-family:var(--font-h);font-weight:900;font-size:1.1rem;color:#f0f4f8;">إشارة</span></a>
+        <p>محاضرة واحدة، مفهومة لكل طالب</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>صفحات المشروع</h4>
+          <a href="/problem.html">المشكلة</a>
+          <a href="/solution.html">الحل</a>
+          <a href="/how-it-works.html">كيف يعمل</a>
+          <a href="/about.html">عن المشروع</a>
+          <a href="/contact.html">تواصل معنا</a>
+        </div>
+        <div class="footer-col">
+          <h4>تجربة المنصة</h4>
+          <a href="/ar/lecturer">المحاضر</a>
+          <a href="/ar/student/deaf">الطالب الأصم</a>
+          <a href="/ar/student/blind">الطالب الكفيف</a>
+          <a href="/ar/student/sighted">الطالب المبصر</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <p>© 2025 إشارة — مشروع إدوثون 3، جامعة الملك خالد</p>
+      <p>صُنع بـ <span style="color:var(--teal)">♥</span> في السعودية</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Responsive fix for two-col-grid -->
+<style>
+  @media (max-width:599px) {
+    .two-col-grid {
+      grid-template-columns: 1fr !important;
+    }
+  }
+</style>
+
+<script src="/shared.js"></script>
+</body>
+</html>

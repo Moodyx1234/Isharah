@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="تعرّف على فريق إشارة — مطورون ومصممون بشغف حقيقي نحو التأثير من جامعة الملك خالد">
+  <title>الفريق | إشارة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=IBM+Plex+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/shared.css">
+  <style>
+    .inst-card {
+      max-width: 700px;
+      margin: 0 auto 60px;
+      background: rgba(0, 201, 167, 0.05);
+      border: 1px solid rgba(0, 201, 167, 0.15);
+      border-radius: 24px;
+      padding: 48px;
+      text-align: center;
+    }
+    .inst-badge {
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 999px;
+      background: rgba(0, 201, 167, 0.12);
+      border: 1px solid rgba(0, 201, 167, 0.3);
+      color: var(--teal);
+      font-size: 0.85rem;
+      font-family: var(--font-b);
+      font-weight: 600;
+    }
+    @media (max-width: 600px) {
+      .team-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .inst-card {
+        padding: 32px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="/ar" class="nav-logo">
+      <div class="logo-icon">إ</div>
+      <div><div class="logo-name">إشارة</div><div class="logo-sub">Isharah</div></div>
+    </a>
+    <div class="nav-links">
+      <a href="/ar" class="nav-link">الرئيسية</a>
+      <a href="/problem.html" class="nav-link">المشكلة</a>
+      <a href="/solution.html" class="nav-link">الحل</a>
+      <a href="/how-it-works.html" class="nav-link">كيف يعمل</a>
+      <a href="/team.html" class="nav-link active">الفريق</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <a href="/ar/login" class="btn-p btn-sm">ابدأ الآن</a>
+      <button class="nav-burger" onclick="toggleMenu()" aria-label="القائمة">☰</button>
+    </div>
+  </div>
+  <div class="nav-mobile" id="mobile-menu">
+    <a href="/ar" class="nav-link">الرئيسية</a>
+    <a href="/problem.html" class="nav-link">المشكلة</a>
+    <a href="/solution.html" class="nav-link">الحل</a>
+    <a href="/how-it-works.html" class="nav-link">كيف يعمل</a>
+    <a href="/team.html" class="nav-link active">الفريق</a>
+    <a href="/ar/login" class="btn-p btn-sm" style="margin-top:8px;width:fit-content;">ابدأ الآن</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="min-height:75vh;">
+  <div class="blob-bg">
+    <div class="blob blob-1" style="top:-15%;right:-8%;width:min(65vw,700px);height:min(65vw,700px);background:radial-gradient(ellipse,rgba(0,201,167,.15) 0%,transparent 68%);"></div>
+    <div class="blob blob-2" style="bottom:-20%;left:-10%;width:min(60vw,650px);height:min(60vw,650px);background:radial-gradient(ellipse,rgba(20,80,200,.1) 0%,transparent 68%);"></div>
+    <div class="blob blob-3" style="top:30%;left:15%;width:min(40vw,420px);height:min(40vw,420px);background:radial-gradient(ellipse,rgba(245,166,35,.07) 0%,transparent 70%);"></div>
+  </div>
+  <div class="grid-tex"></div>
+  <div class="con">
+    <div class="hero-badge reveal">من نحن؟</div>
+    <h1 class="hero-title reveal d1">الفريق الذي يؤمن بالإتاحة</h1>
+    <p class="hero-sub reveal d2">مطورون ومصممون بشغف حقيقي نحو التأثير</p>
+    <p class="hero-desc reveal d2">فريق متعدد التخصصات يجمع بين الذكاء الاصطناعي، وتصميم تجربة المستخدم، والتطوير — من جامعة الملك خالد.</p>
+  </div>
+</section>
+
+<!-- SECTION 1: Team Grid -->
+<section class="alt">
+  <div class="con">
+    <div class="sec-head">
+      <span class="stag">الفريق</span>
+      <h2>الأشخاص خلف إشارة</h2>
+    </div>
+
+    <div class="team-grid reveal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+
+      <!-- Member 1 -->
+      <div class="team-card">
+        <div class="team-avatar" style="background:linear-gradient(135deg,#00c9a7,#009e84);">م.ف</div>
+        <div class="team-name">محمد الفهد</div>
+        <div class="team-role">قائد المشروع & مطور Backend</div>
+        <div class="team-bio">متخصص في هندسة البرمجيات وأنظمة الوقت الفعلي. يقود تطوير الخادم والذكاء الاصطناعي.</div>
+        <div class="team-socials">
+          <a href="#" class="social-btn" title="LinkedIn">🔗</a>
+          <a href="#" class="social-btn" title="GitHub">🐙</a>
+        </div>
+      </div>
+
+      <!-- Member 2 -->
+      <div class="team-card">
+        <div class="team-avatar" style="background:linear-gradient(135deg,#6366f1,#4f46e5);">س.ع</div>
+        <div class="team-name">سارة العلي</div>
+        <div class="team-role">مطوّرة Frontend & تجربة المستخدم</div>
+        <div class="team-bio">تتخصص في تصميم وتطوير واجهات المستخدم العربية وتجارب الوصول.</div>
+        <div class="team-socials">
+          <a href="#" class="social-btn" title="LinkedIn">🔗</a>
+          <a href="#" class="social-btn" title="GitHub">🐙</a>
+        </div>
+      </div>
+
+      <!-- Member 3 -->
+      <div class="team-card">
+        <div class="team-avatar" style="background:linear-gradient(135deg,#f5a623,#d4780a);">ع.م</div>
+        <div class="team-name">علي المالكي</div>
+        <div class="team-role">مهندس الذكاء الاصطناعي</div>
+        <div class="team-bio">يعمل على نماذج معالجة اللغة الطبيعية وخوارزميات الترجمة الآنية.</div>
+        <div class="team-socials">
+          <a href="#" class="social-btn" title="LinkedIn">🔗</a>
+          <a href="#" class="social-btn" title="GitHub">🐙</a>
+        </div>
+      </div>
+
+      <!-- Member 4 -->
+      <div class="team-card">
+        <div class="team-avatar" style="background:linear-gradient(135deg,#10b981,#059669);">ن.ش</div>
+        <div class="team-name">نورة الشهري</div>
+        <div class="team-role">مصمّمة الرسومات & ثلاثية الأبعاد</div>
+        <div class="team-bio">تصمم الأفاتار ثلاثي الأبعاد وتطوّر حركات لغة الإشارة بدقة واقعية.</div>
+        <div class="team-socials">
+          <a href="#" class="social-btn" title="LinkedIn">🔗</a>
+          <a href="#" class="social-btn" title="GitHub">🐙</a>
+        </div>
+      </div>
+
+      <!-- Member 5 -->
+      <div class="team-card">
+        <div class="team-avatar" style="background:linear-gradient(135deg,#ec4899,#be185d);">خ.ب</div>
+        <div class="team-name">خالد البقمي</div>
+        <div class="team-role">مطوّر تقنيات الوصول</div>
+        <div class="team-bio">متخصص في معايير WCAG وإتاحة التطبيقات للمستخدمين من ذوي الإعاقة.</div>
+        <div class="team-socials">
+          <a href="#" class="social-btn" title="LinkedIn">🔗</a>
+          <a href="#" class="social-btn" title="GitHub">🐙</a>
+        </div>
+      </div>
+
+      <!-- Member 6 -->
+      <div class="team-card">
+        <div class="team-avatar" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);">أ.ز</div>
+        <div class="team-name">أسماء الزهراني</div>
+        <div class="team-role">باحثة ومنسّقة المشروع</div>
+        <div class="team-bio">تتابع تجارب المستخدمين من ذوي الإعاقة وتُدير التواصل مع المختصين.</div>
+        <div class="team-socials">
+          <a href="#" class="social-btn" title="LinkedIn">🔗</a>
+          <a href="#" class="social-btn" title="GitHub">🐙</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: Institutional Badge -->
+<section>
+  <div class="con">
+    <div class="inst-card reveal">
+      <div style="font-size:3rem;margin-bottom:16px;">🏛️</div>
+      <h3 style="font-family:var(--font-h);font-weight:800;font-size:1.5rem;color:var(--text);margin-bottom:12px;">فريق إدوثون 3 — جامعة الملك خالد</h3>
+      <p style="color:var(--muted);max-width:480px;margin:12px auto 24px;line-height:1.85;">مشروع إشارة وُلد في بيئة إدوثون 3 بجامعة الملك خالد — فعالية الابتكار التعليمي التي تجمع أفضل العقول لحل تحديات التعليم.</p>
+      <span class="inst-badge">🏆 إدوثون 3 — 2025</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="con">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/ar" style="display:flex;align-items:center;gap:10px;"><div class="logo-icon">إ</div><span style="font-family:var(--font-h);font-weight:900;font-size:1.1rem;color:#f0f4f8;">إشارة</span></a>
+        <p>محاضرة واحدة، مفهومة لكل طالب</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>صفحات المشروع</h4>
+          <a href="/problem.html">المشكلة</a>
+          <a href="/solution.html">الحل</a>
+          <a href="/how-it-works.html">كيف يعمل</a>
+          <a href="/about.html">عن المشروع</a>
+          <a href="/contact.html">تواصل معنا</a>
+        </div>
+        <div class="footer-col">
+          <h4>تجربة المنصة</h4>
+          <a href="/ar/lecturer">المحاضر</a>
+          <a href="/ar/student/deaf">الطالب الأصم</a>
+          <a href="/ar/student/blind">الطالب الكفيف</a>
+          <a href="/ar/student/sighted">الطالب المبصر</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <p>© 2025 إشارة — مشروع إدوثون 3، جامعة الملك خالد</p>
+      <p>صُنع بـ <span style="color:var(--teal)">♥</span> في السعودية</p>
+    </div>
+  </div>
+</footer>
+
+<script src="/shared.js"></script>
+
+</body>
+</html>

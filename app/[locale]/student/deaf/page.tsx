@@ -7,12 +7,10 @@ import { Navbar } from "@/components/nav/Navbar";
 import { LiveCaptions } from "@/components/captions/LiveCaptions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getSocket, EVENTS } from "@/lib/socket-client";
 import { textToGestureTokens, GESTURES } from "@/lib/sign-language/gestures";
 import { motion, AnimatePresence } from "framer-motion";
-import { Hand, Wifi, WifiOff, MessageSquare, Loader2 } from "lucide-react";
+import { Hand, Wifi, WifiOff, MessageSquare, Loader2, Ear } from "lucide-react";
 
 const SignAvatar = dynamic(
   () => import("@/components/avatar/SignAvatar").then((m) => m.SignAvatar),
@@ -57,14 +55,12 @@ export default function DeafStudentPage() {
   const playGestureQueue = useCallback(async () => {
     if (isPlayingRef.current || gestureQueueRef.current.length === 0) return;
     isPlayingRef.current = true;
-
     while (gestureQueueRef.current.length > 0) {
       const gesture = gestureQueueRef.current.shift()!;
       const gestureDef = GESTURES[gesture] || GESTURES.neutral;
       setCurrentGesture(gesture);
       await new Promise((r) => setTimeout(r, gestureDef.durationMs + 100));
     }
-
     setCurrentGesture("neutral");
     isPlayingRef.current = false;
   }, []);
@@ -73,37 +69,21 @@ export default function DeafStudentPage() {
     const socket = getSocket();
     socket.on(EVENTS.CONNECTED, () => setConnected(true));
     socket.on(EVENTS.DISCONNECTED, () => setConnected(false));
-
     socket.on("session_joined", (data: { transcript: TranscriptEntry[] }) => {
       setJoined(true);
       if (data.transcript) setTranscript(data.transcript);
     });
-
     socket.on(EVENTS.SESSION_NOT_FOUND, () => setNotFound(true));
-
-    socket.on(EVENTS.SESSION_ENDED, () => {
-      setSessionEnded(true);
-      setJoined(false);
-    });
-
+    socket.on(EVENTS.SESSION_ENDED, () => { setSessionEnded(true); setJoined(false); });
     socket.on(EVENTS.NEW_TRANSCRIPT, (entry: TranscriptEntry) => {
       setTranscript((prev) => [...prev, { ...entry, timestamp: new Date() }]);
       setCurrentCaption(entry.text);
-
-      const tokens = entry.tokens?.length
-        ? entry.tokens
-        : textToGestureTokens(entry.simplified || entry.text);
-
+      const tokens = entry.tokens?.length ? entry.tokens : textToGestureTokens(entry.simplified || entry.text);
       gestureQueueRef.current.push(...tokens);
       playGestureQueue();
-
       setTimeout(() => setCurrentCaption(""), entry.text.length * 80 + 1000);
     });
-
-    socket.on(EVENTS.NEW_SLIDE, (data: { imageData: string }) => {
-      setCurrentSlide(data.imageData);
-    });
-
+    socket.on(EVENTS.NEW_SLIDE, (data: { imageData: string }) => { setCurrentSlide(data.imageData); });
     return () => {
       socket.off("session_joined");
       socket.off(EVENTS.SESSION_NOT_FOUND);
@@ -135,42 +115,71 @@ export default function DeafStudentPage() {
 
   if (!joined) {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col hero-mesh">
         <Navbar />
-        <main className="flex-1 flex items-center justify-center px-6 py-16">
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle className="text-2xl">{t("deaf_view.title")}</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-4">
-              <p className="text-[var(--color-text-muted)]">{t("deaf_view.join_prompt")}</p>
-              {notFound && (
-                <div className="rounded-xl bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 p-3 text-sm text-red-700 dark:text-red-300">
-                  {t("errors.session_not_found")}
+        <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-6 sm:py-10">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="w-full max-w-md"
+          >
+            {/* Glass card */}
+            <div className="rounded-3xl border border-white/15 bg-white/8 backdrop-blur-xl p-8 shadow-2xl shadow-black/40">
+              {/* Role icon */}
+              <div className="flex justify-center mb-6">
+                <div className="h-16 w-16 rounded-2xl gradient-primary flex items-center justify-center shadow-xl shadow-primary/40 ring-4 ring-primary/20">
+                  <Ear size={28} className="text-white" aria-hidden />
                 </div>
-              )}
+              </div>
+
+              <h1 className="text-2xl font-black text-white text-center mb-2">
+                {t("deaf_view.title")}
+              </h1>
+              <p className="text-white/50 text-center text-sm mb-7">
+                {t("deaf_view.join_prompt")}
+              </p>
+
+              <AnimatePresence>
+                {notFound && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="overflow-hidden mb-4"
+                  >
+                    <div className="rounded-xl bg-red-500/15 border border-red-500/30 p-3 text-sm text-red-300 text-center">
+                      {t("errors.session_not_found")}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               <div className="flex gap-2">
-                <Input
+                <input
                   value={sessionCode}
                   onChange={(e) => setSessionCode(e.target.value.toUpperCase())}
                   placeholder={t("session.code_placeholder")}
                   maxLength={6}
-                  className="text-center text-2xl font-mono tracking-widest uppercase"
+                  className="flex-1 h-12 rounded-xl border border-white/20 bg-white/10 px-4 text-center text-2xl font-mono tracking-[0.3em] uppercase text-white placeholder:text-white/25 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-colors"
                   onKeyDown={(e) => { if (e.key === "Enter") joinSession(); }}
                   aria-label={t("session.code")}
                 />
-                <Button onClick={joinSession} aria-label={t("session.join")}>
+                <button
+                  onClick={joinSession}
+                  className="h-12 px-5 rounded-xl bg-accent font-bold text-white shadow-lg shadow-accent/30 hover:bg-accent-dark transition-colors active:scale-[0.97] shrink-0"
+                >
                   {t("common.join")}
-                </Button>
+                </button>
               </div>
 
               {sessionEnded && (
-                <div className="rounded-xl bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 p-3 text-sm text-yellow-800 dark:text-yellow-200">
+                <div className="mt-4 rounded-xl bg-yellow-500/15 border border-yellow-500/30 p-3 text-sm text-yellow-300 text-center">
                   {t("errors.session_ended")}
                 </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </motion.div>
         </main>
       </div>
     );
@@ -179,29 +188,29 @@ export default function DeafStudentPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-6 flex flex-col gap-6">
+      <main className="flex-1 mx-auto w-full max-w-7xl px-3 sm:px-4 py-4 sm:py-6 flex flex-col gap-4 sm:gap-5" id="main-content">
+
         {/* Status bar */}
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <h1 className="text-2xl font-bold">{t("deaf_view.title")}</h1>
-          <div className="flex items-center gap-3">
-            <Badge variant={connected ? "success" : "error"} className="gap-1.5">
-              {connected ? (
-                <><Wifi size={12} aria-hidden />{t("session.connected")}</>
-              ) : (
-                <><WifiOff size={12} aria-hidden />{t("session.connecting")}</>
-              )}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <h1 className="text-lg sm:text-xl font-black">{t("deaf_view.title")}</h1>
+          <div className="flex items-center gap-2 flex-wrap">
+            <Badge variant={connected ? "success" : "error"} className="gap-1">
+              {connected
+                ? <><Wifi size={10} sm:size={11} aria-hidden /><span className="text-xs">{t("session.connected")}</span></>
+                : <><WifiOff size={10} sm:size={11} aria-hidden /><span className="text-xs">{t("session.connecting")}</span></>
+              }
             </Badge>
-            <Badge variant="outline">
-              {t("session.code")}: <strong className="ms-1 font-mono">{sessionCode}</strong>
-            </Badge>
+            <div className="rounded-lg sm:rounded-xl border border-[var(--card-border)] bg-[var(--card)] px-2.5 sm:px-3 py-1 sm:py-1.5 text-xs font-medium">
+              {t("session.code")}: <strong className="font-mono ms-1">{sessionCode}</strong>
+            </div>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6 flex-1">
-          {/* Avatar — takes 2/3 on large screens */}
-          <div className="lg:col-span-2 flex flex-col gap-4">
-            {/* 3D Avatar */}
-            <div className="h-[400px] md:h-[480px]">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
+          {/* Avatar + captions — 2/3 */}
+          <div className="lg:col-span-2 flex flex-col gap-3 sm:gap-4">
+            {/* Avatar */}
+            <div className="rounded-lg sm:rounded-2xl overflow-hidden h-[300px] sm:h-[380px] md:h-[460px]">
               <SignAvatar
                 currentGesture={currentGesture}
                 isActive={joined && currentGesture !== "neutral"}
@@ -214,90 +223,84 @@ export default function DeafStudentPage() {
 
             {/* Slide preview */}
             {currentSlide && (
-              <div className="card p-4">
-                <p className="text-xs font-medium text-[var(--color-text-muted)] mb-2">
+              <div className="card p-3 sm:p-4">
+                <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">
                   {locale === "ar" ? "الشريحة الحالية" : "Current Slide"}
                 </p>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={currentSlide}
                   alt={locale === "ar" ? "شريحة المحاضرة" : "Lecture slide"}
-                  className="max-h-48 object-contain rounded-lg w-full"
+                  className="max-h-40 sm:max-h-44 object-contain rounded-lg w-full"
                 />
               </div>
             )}
 
-            {/* Raise hand button */}
-            <div className="flex justify-center">
+            {/* Raise hand */}
+            <div className="flex flex-col items-center gap-2 sm:gap-3">
               <Button
                 variant={handRaised ? "accent" : "outline"}
                 size="lg"
                 onClick={raiseHand}
                 aria-label={t("deaf_view.raise_hand")}
                 aria-pressed={handRaised}
+                className="w-full sm:w-auto sm:px-10 h-10 sm:h-auto text-sm sm:text-base"
               >
-                <Hand size={20} aria-hidden />
+                <Hand size={16} sm:size={20} aria-hidden />
                 {t("deaf_view.raise_hand")}
               </Button>
-            </div>
 
-            {/* Feedback */}
-            <AnimatePresence>
-              {handRaisedMsg && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  className="text-center text-sm text-green-600 font-medium"
-                  role="status"
-                  aria-live="polite"
-                >
-                  {t("deaf_view.hand_raised_msg")}
-                </motion.div>
-              )}
-            </AnimatePresence>
+              <AnimatePresence>
+                {handRaisedMsg && (
+                  <motion.p
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="text-xs sm:text-sm text-green-600 dark:text-green-400 font-medium"
+                    role="status"
+                    aria-live="polite"
+                  >
+                    {t("deaf_view.hand_raised_msg")}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
           {/* Transcript sidebar */}
-          <div className="flex flex-col gap-4">
-            <Card className="flex-1">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <MessageSquare size={18} aria-hidden />
-                  {t("deaf_view.transcript")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div
-                  className="max-h-[600px] overflow-y-auto flex flex-col gap-3"
-                  aria-live="polite"
-                  aria-label={t("deaf_view.transcript")}
-                >
-                  {transcript.length === 0 ? (
-                    <p className="text-sm text-[var(--color-text-muted)] py-4 text-center">
-                      {t("deaf_view.transcript_empty")}
-                    </p>
-                  ) : (
-                    transcript.map((entry, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="rounded-xl bg-[var(--bg)] border border-[var(--card-border)] p-3"
-                      >
-                        <p className="text-sm leading-relaxed">{entry.text}</p>
-                        {entry.simplified && entry.simplified !== entry.text && (
-                          <p className="text-xs text-primary/70 mt-1 italic">
-                            {entry.simplified}
-                          </p>
-                        )}
-                      </motion.div>
-                    ))
-                  )}
-                  <div ref={transcriptEndRef} />
-                </div>
-              </CardContent>
-            </Card>
+          <div className="card flex flex-col overflow-hidden max-h-[500px] sm:max-h-none">
+            <div className="flex items-center gap-2 p-3 sm:p-4 border-b border-[var(--card-border)] shrink-0">
+              <div className="h-6 sm:h-7 w-6 sm:w-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <MessageSquare size={13} sm:size={14} className="text-primary" aria-hidden />
+              </div>
+              <span className="font-bold text-xs sm:text-sm">{t("deaf_view.transcript")}</span>
+            </div>
+
+            <div
+              className="flex-1 overflow-y-auto p-3 sm:p-4 flex flex-col gap-2 sm:gap-3"
+              aria-live="polite"
+            >
+              {transcript.length === 0 ? (
+                <p className="text-xs sm:text-sm text-[var(--color-text-muted)] py-4 text-center">
+                  {t("deaf_view.transcript_empty")}
+                </p>
+              ) : (
+                transcript.map((entry, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-lg sm:rounded-xl bg-[var(--bg)] border border-[var(--card-border)] p-2.5 sm:p-3"
+                  >
+                    <p className="text-xs sm:text-sm leading-relaxed">{entry.text}</p>
+                    {entry.simplified && entry.simplified !== entry.text && (
+                      <p className="text-xs text-primary/60 mt-1 italic">{entry.simplified}</p>
+                    )}
+                  </motion.div>
+                ))
+              )}
+              <div ref={transcriptEndRef} />
+            </div>
           </div>
         </div>
       </main>

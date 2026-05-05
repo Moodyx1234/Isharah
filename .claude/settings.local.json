@@ -27,7 +27,10 @@
       "Bash(pkill -f \"node server.js\")",
       "Bash(curl -s -X POST http://localhost:3000/api/rephrase-for-sign -H \"Content-Type: application/json\" -d '{\"text\":\"مرحباً طالب اليوم\",\"locale\":\"ar\"}')",
       "Bash(curl -s -X POST http://localhost:3000/api/summarize -H \"Content-Type: application/json\" -d '{\"transcript\":[],\"locale\":\"ar\"}')",
-      "Bash(grep -v \"^$\")"
+      "Bash(grep -v \"^$\")",
+      "Bash(npm run *)",
+      "Bash(npm uninstall *)",
+      "Bash(git add *)"
     ]
   }
 }

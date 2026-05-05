@@ -1,19 +1,18 @@
-"use client";
-
-import { useLocale } from "next-intl";
-import { useRouter, usePathname } from "next/navigation";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Globe } from "lucide-react";
 
 export function LanguageToggle({ subtle = false }: { subtle?: boolean }) {
-  const locale = useLocale();
-  const router = useRouter();
-  const pathname = usePathname();
+  const { i18n } = useTranslation();
+  const locale = i18n.language;
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const toggle = () => {
     const nextLocale = locale === "ar" ? "en" : "ar";
-    const segments = pathname.split("/");
+    const segments = location.pathname.split("/");
     segments[1] = nextLocale;
-    router.push(segments.join("/"));
+    navigate(segments.join("/"));
   };
 
   return (

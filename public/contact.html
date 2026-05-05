@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="تواصل مع فريق إشارة — نرد على جميع الرسائل خلال 24 ساعة. سواء كنت مستخدماً أو شريكاً أو متحمساً للإتاحة">
+  <title>تواصل معنا | إشارة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=IBM+Plex+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/shared.css">
+  <style>
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 52px;
+      align-items: start;
+    }
+    .lower-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 700px) {
+      .contact-grid {
+        grid-template-columns: 1fr !important;
+        gap: 32px;
+      }
+      .lower-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="/ar" class="nav-logo">
+      <div class="logo-icon">إ</div>
+      <div><div class="logo-name">إشارة</div><div class="logo-sub">Isharah</div></div>
+    </a>
+    <div class="nav-links">
+      <a href="/ar" class="nav-link">الرئيسية</a>
+      <a href="/problem.html" class="nav-link">المشكلة</a>
+      <a href="/solution.html" class="nav-link">الحل</a>
+      <a href="/how-it-works.html" class="nav-link">كيف يعمل</a>
+      <a href="/team.html" class="nav-link">الفريق</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <a href="/ar/login" class="btn-p btn-sm">ابدأ الآن</a>
+      <button class="nav-burger" onclick="toggleMenu()" aria-label="القائمة">☰</button>
+    </div>
+  </div>
+  <div class="nav-mobile" id="mobile-menu">
+    <a href="/ar" class="nav-link">الرئيسية</a>
+    <a href="/problem.html" class="nav-link">المشكلة</a>
+    <a href="/solution.html" class="nav-link">الحل</a>
+    <a href="/how-it-works.html" class="nav-link">كيف يعمل</a>
+    <a href="/team.html" class="nav-link">الفريق</a>
+    <a href="/ar/login" class="btn-p btn-sm" style="margin-top:8px;width:fit-content;">ابدأ الآن</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="min-height:75vh;">
+  <div class="blob-bg">
+    <div class="blob blob-1" style="top:-15%;right:-8%;width:min(65vw,700px);height:min(65vw,700px);background:radial-gradient(ellipse,rgba(0,201,167,.15) 0%,transparent 68%);"></div>
+    <div class="blob blob-2" style="bottom:-20%;left:-10%;width:min(60vw,650px);height:min(60vw,650px);background:radial-gradient(ellipse,rgba(20,80,200,.1) 0%,transparent 68%);"></div>
+    <div class="blob blob-3" style="top:30%;left:15%;width:min(40vw,420px);height:min(40vw,420px);background:radial-gradient(ellipse,rgba(245,166,35,.07) 0%,transparent 70%);"></div>
+  </div>
+  <div class="grid-tex"></div>
+  <div class="con">
+    <div class="hero-badge reveal">تواصل معنا</div>
+    <h1 class="hero-title reveal d1">نسمعك، ونريد أن نتواصل</h1>
+    <p class="hero-sub reveal d2">سواء كنت مستخدماً أو شريكاً أو متحمساً للإتاحة — نحن هنا</p>
+    <p class="hero-desc reveal d2">فريق إشارة يرد على جميع الرسائل خلال 24 ساعة. لا تتردد في التواصل.</p>
+  </div>
+</section>
+
+<!-- SECTION 1: Contact Form + Info -->
+<section class="alt">
+  <div class="con">
+    <div class="contact-grid">
+
+      <!-- Left: Contact Form -->
+      <div class="card reveal">
+        <h3 style="font-family:var(--font-h);font-weight:700;font-size:1.3rem;color:var(--text);margin-bottom:24px;">أرسل لنا رسالة</h3>
+        <form id="contact-form" onsubmit="handleSubmit(event)">
+          <div class="form-group">
+            <label class="form-label">الاسم الكامل</label>
+            <input type="text" class="form-input" placeholder="اسمك هنا" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">البريد الإلكتروني</label>
+            <input type="email" class="form-input" placeholder="email@example.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">الموضوع</label>
+            <input type="text" class="form-input" placeholder="موضوع رسالتك" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">الرسالة</label>
+            <textarea class="form-textarea" rows="5" placeholder="اكتب رسالتك هنا..." required></textarea>
+          </div>
+          <button type="submit" class="btn-p" style="width:100%;">إرسال الرسالة ←</button>
+        </form>
+      </div>
+
+      <!-- Right: Info Cards -->
+      <div style="display:flex;flex-direction:column;gap:16px;" class="reveal d1">
+        <div class="contact-card">
+          <div class="contact-icon">📧</div>
+          <div>
+            <h4 style="font-family:var(--font-h);font-weight:600;font-size:0.95rem;margin-bottom:4px;color:var(--text);">البريد الإلكتروني</h4>
+            <p style="color:var(--muted);font-size:0.85rem;">isharah@kku.edu.sa</p>
+          </div>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-icon">📍</div>
+          <div>
+            <h4 style="font-family:var(--font-h);font-weight:600;font-size:0.95rem;margin-bottom:4px;color:var(--text);">الموقع</h4>
+            <p style="color:var(--muted);font-size:0.85rem;">جامعة الملك خالد — أبها، المملكة العربية السعودية</p>
+          </div>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-icon">🕐</div>
+          <div>
+            <h4 style="font-family:var(--font-h);font-weight:600;font-size:0.95rem;margin-bottom:4px;color:var(--text);">وقت الرد</h4>
+            <p style="color:var(--muted);font-size:0.85rem;">نرد خلال 24 ساعة في أيام العمل</p>
+          </div>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-icon">🤝</div>
+          <div>
+            <h4 style="font-family:var(--font-h);font-weight:600;font-size:0.95rem;margin-bottom:4px;color:var(--text);">للشراكات</h4>
+            <p style="color:var(--muted);font-size:0.85rem;">partnerships@isharah.sa — للجامعات والمؤسسات</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: Map + Social -->
+<section>
+  <div class="con">
+    <div class="lower-grid reveal">
+
+      <!-- Map Box -->
+      <div class="map-box">
+        <div style="font-size:2.5rem;margin-bottom:12px;">📍</div>
+        <p style="font-family:var(--font-h);font-weight:600;font-size:1rem;color:var(--text);margin-bottom:8px;">جامعة الملك خالد، أبها</p>
+        <p style="color:var(--muted);font-size:0.8rem;">18.2164° N, 42.5053° E</p>
+      </div>
+
+      <!-- Social Card -->
+      <div class="card" style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:20px;">
+        <h3 style="font-family:var(--font-h);font-weight:700;font-size:1.1rem;color:var(--text);">تابعنا على منصات التواصل</h3>
+        <div style="display:flex;gap:16px;justify-content:center;">
+          <a href="#" class="social-btn" title="Twitter / X">𝕏</a>
+          <a href="#" class="social-btn" title="LinkedIn">in</a>
+          <a href="#" class="social-btn" title="GitHub">gh</a>
+          <a href="#" class="social-btn" title="Instagram">ig</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="con">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/ar" style="display:flex;align-items:center;gap:10px;"><div class="logo-icon">إ</div><span style="font-family:var(--font-h);font-weight:900;font-size:1.1rem;color:#f0f4f8;">إشارة</span></a>
+        <p>محاضرة واحدة، مفهومة لكل طالب</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>صفحات المشروع</h4>
+          <a href="/problem.html">المشكلة</a>
+          <a href="/solution.html">الحل</a>
+          <a href="/how-it-works.html">كيف يعمل</a>
+          <a href="/about.html">عن المشروع</a>
+          <a href="/contact.html">تواصل معنا</a>
+        </div>
+        <div class="footer-col">
+          <h4>تجربة المنصة</h4>
+          <a href="/ar/lecturer">المحاضر</a>
+          <a href="/ar/student/deaf">الطالب الأصم</a>
+          <a href="/ar/student/blind">الطالب الكفيف</a>
+          <a href="/ar/student/sighted">الطالب المبصر</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <p>© 2025 إشارة — مشروع إدوثون 3، جامعة الملك خالد</p>
+      <p>صُنع بـ <span style="color:var(--teal)">♥</span> في السعودية</p>
+    </div>
+  </div>
+</footer>
+
+<script src="/shared.js"></script>
+<script>
+  function handleSubmit(e) {
+    e.preventDefault();
+    var btn = e.target.querySelector('button[type="submit"]');
+    btn.textContent = '✓ تم الإرسال بنجاح!';
+    btn.disabled = true;
+    btn.style.background = 'rgba(0,201,167,0.2)';
+    btn.style.borderColor = 'var(--teal)';
+    btn.style.color = 'var(--teal)';
+  }
+</script>
+
+</body>
+</html>

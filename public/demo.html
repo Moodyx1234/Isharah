@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="جرّب منصة إشارة بنفسك — محاكاة لتجربة الطالب في الوقت الفعلي من الترجمة إلى لغة الإشارة حتى الوصف الصوتي الذكي">
+  <title>العرض التجريبي | إشارة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=IBM+Plex+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/shared.css">
+  <style>
+    .pill-t {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 999px;
+      background: rgba(0, 201, 167, 0.1);
+      border: 1px solid rgba(0, 201, 167, 0.25);
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-family: var(--font-b);
+      font-weight: 500;
+      margin: 4px;
+    }
+    .mock-panel {
+      background: rgba(0, 201, 167, 0.05);
+      border: 1px solid rgba(0, 201, 167, 0.15);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+    }
+    .mock-panel-amber {
+      background: rgba(245, 166, 35, 0.05);
+      border: 1px solid rgba(245, 166, 35, 0.15);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+    }
+    .badge-teal {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 999px;
+      background: rgba(0, 201, 167, 0.15);
+      border: 1px solid rgba(0, 201, 167, 0.3);
+      color: var(--teal);
+      font-size: 0.82rem;
+      font-family: var(--font-b);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .badge-amber {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 999px;
+      background: rgba(245, 166, 35, 0.15);
+      border: 1px solid rgba(245, 166, 35, 0.3);
+      color: var(--amber);
+      font-size: 0.82rem;
+      font-family: var(--font-b);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .demo-result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .sign-box {
+      height: 140px;
+      border: 2px dashed rgba(0, 201, 167, 0.3);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 16px 0;
+    }
+    .audio-box {
+      background: rgba(245, 166, 35, 0.05);
+      border: 1px solid rgba(245, 166, 35, 0.15);
+      border-radius: 14px;
+      padding: 16px;
+      margin: 16px 0;
+      font-size: 0.88rem;
+      line-height: 1.8;
+      color: rgba(240, 244, 248, 0.7);
+      text-align: right;
+    }
+    .signup-card {
+      max-width: 620px;
+      margin: 0 auto;
+      background: rgba(0, 201, 167, 0.06);
+      border: 1px solid rgba(0, 201, 167, 0.18);
+      border-radius: 24px;
+      padding: 52px 40px;
+      text-align: center;
+    }
+    .email-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    @media (max-width: 600px) {
+      .demo-result-grid {
+        grid-template-columns: 1fr;
+      }
+      .email-row {
+        flex-direction: column;
+      }
+      .signup-card {
+        padding: 36px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="/ar" class="nav-logo">
+      <div class="logo-icon">إ</div>
+      <div><div class="logo-name">إشارة</div><div class="logo-sub">Isharah</div></div>
+    </a>
+    <div class="nav-links">
+      <a href="/ar" class="nav-link">الرئيسية</a>
+      <a href="/problem.html" class="nav-link">المشكلة</a>
+      <a href="/solution.html" class="nav-link">الحل</a>
+      <a href="/how-it-works.html" class="nav-link">كيف يعمل</a>
+      <a href="/team.html" class="nav-link">الفريق</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <a href="/ar/login" class="btn-p btn-sm">ابدأ الآن</a>
+      <button class="nav-burger" onclick="toggleMenu()" aria-label="القائمة">☰</button>
+    </div>
+  </div>
+  <div class="nav-mobile" id="mobile-menu">
+    <a href="/ar" class="nav-link">الرئيسية</a>
+    <a href="/problem.html" class="nav-link">المشكلة</a>
+    <a href="/solution.html" class="nav-link">الحل</a>
+    <a href="/how-it-works.html" class="nav-link">كيف يعمل</a>
+    <a href="/team.html" class="nav-link">الفريق</a>
+    <a href="/ar/login" class="btn-p btn-sm" style="margin-top:8px;width:fit-content;">ابدأ الآن</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="min-height:80vh;">
+  <div class="blob-bg">
+    <div class="blob blob-1" style="top:-15%;right:-8%;width:min(65vw,700px);height:min(65vw,700px);background:radial-gradient(ellipse,rgba(0,201,167,.15) 0%,transparent 68%);"></div>
+    <div class="blob blob-2" style="bottom:-20%;left:-10%;width:min(60vw,650px);height:min(60vw,650px);background:radial-gradient(ellipse,rgba(20,80,200,.1) 0%,transparent 68%);"></div>
+    <div class="blob blob-3" style="top:30%;left:15%;width:min(40vw,420px);height:min(40vw,420px);background:radial-gradient(ellipse,rgba(245,166,35,.07) 0%,transparent 70%);"></div>
+  </div>
+  <div class="grid-tex"></div>
+  <div class="con">
+    <div class="hero-badge reveal">نسخة تجريبية</div>
+    <h1 class="hero-title reveal d1">جرّب إشارة بنفسك</h1>
+    <p class="hero-sub reveal d2">محاكاة لتجربة الطالب في الوقت الفعلي</p>
+    <p class="hero-desc reveal d2">ارفع ملف محاضرة واستكشف كيف تعمل إشارة — من الترجمة إلى لغة الإشارة حتى الوصف الصوتي الذكي.</p>
+  </div>
+</section>
+
+<!-- SECTION 1: Demo Interface -->
+<section class="alt">
+  <div class="con">
+    <div class="sec-head">
+      <span class="stag">العرض</span>
+      <h2>جرّب المحاكاة الآن</h2>
+    </div>
+
+    <div class="demo-shell reveal">
+      <!-- Upload Area -->
+      <div class="upload-area">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--teal);margin-bottom:16px;">
+          <polyline points="16 16 12 12 8 16"></polyline>
+          <line x1="12" y1="12" x2="12" y2="21"></line>
+          <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path>
+        </svg>
+        <h3 style="font-size:1.1rem;font-family:var(--font-h);font-weight:700;color:var(--teal);margin-bottom:8px;">ارفع ملف محاضرتك</h3>
+        <p style="color:var(--muted);font-size:0.85rem;margin-bottom:16px;">PDF أو PowerPoint أو صورة — نحلل المحتوى فورياً</p>
+        <div>
+          <span class="pill-t">PDF</span>
+          <span class="pill-t">PPT</span>
+          <span class="pill-t">JPG</span>
+          <span class="pill-t">PNG</span>
+        </div>
+      </div>
+
+      <!-- Simulate Button -->
+      <button id="demo-btn" class="btn-p" style="width:100%;margin-top:24px;" onclick="simDemo()">
+        🚀 ابدأ المحاكاة
+      </button>
+
+      <!-- Spinner -->
+      <div id="demo-spin" class="spinner" style="display:none;"></div>
+
+      <!-- Demo Result -->
+      <div id="demo-result" class="demo-result" style="display:none;">
+        <div class="demo-result-grid">
+          <!-- Col 1: Sign Language -->
+          <div class="mock-panel">
+            <div class="badge-teal">🤟 أفاتار 3D</div>
+            <div class="sign-box">
+              <span style="font-size:4rem;">🤟</span>
+            </div>
+            <p style="color:var(--muted);font-size:0.8rem;">الأفاتار يُترجم: "مرحباً بكم في المحاضرة"</p>
+          </div>
+
+          <!-- Col 2: Audio Description -->
+          <div class="mock-panel-amber">
+            <div class="badge-amber">🔊 وصف صوتي</div>
+            <div class="audio-box">
+              تحتوي الشريحة على عنوان: "مقدمة في الخوارزميات". تظهر قائمة من 3 نقاط تشرح مفهوم التعقيد الزمني...
+            </div>
+            <p style="color:var(--muted);font-size:0.8rem;">يُقرأ صوتياً تلقائياً عند عرض الشريحة</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: Coming Soon -->
+<section>
+  <div class="con">
+    <div class="sec-head">
+      <span class="stag">قريباً</span>
+      <h2>ما يأتي في الإصدار الكامل</h2>
+    </div>
+
+    <div class="values-grid">
+      <div class="value-card reveal">
+        <div class="value-icon">🎯</div>
+        <div class="value-title">دعم مباشر</div>
+        <div class="value-desc">جلسات محاضرة مباشرة مع ترجمة آنية للطلاب المتصلين</div>
+      </div>
+      <div class="value-card reveal d1">
+        <div class="value-icon">📱</div>
+        <div class="value-title">تطبيق الجوال</div>
+        <div class="value-desc">تطبيق مخصص للطلاب ذوي الإعاقة يعمل على iOS و Android</div>
+      </div>
+      <div class="value-card reveal d2">
+        <div class="value-icon">📊</div>
+        <div class="value-title">لوحة المحاضر</div>
+        <div class="value-desc">تقارير تفصيلية عن تفاعل الطلاب ومستوى إتاحة المحتوى</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: Email Signup -->
+<section class="alt">
+  <div class="con">
+    <div class="signup-card reveal">
+      <h3 style="font-family:var(--font-h);font-weight:800;font-size:1.5rem;color:var(--text);margin-bottom:12px;">كن أول من يجرّب النسخة الكاملة</h3>
+      <p style="color:var(--muted);margin:12px 0 28px;line-height:1.75;">أدخل بريدك الإلكتروني وسنُعلمك عند إطلاق الإصدار الكامل</p>
+      <div class="email-row">
+        <input type="email" class="form-input" placeholder="بريدك الإلكتروني" style="flex:1;" />
+        <button class="btn-p" onclick="this.textContent='✓ تم!';this.disabled=true;">أبلغني</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="con">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/ar" style="display:flex;align-items:center;gap:10px;"><div class="logo-icon">إ</div><span style="font-family:var(--font-h);font-weight:900;font-size:1.1rem;color:#f0f4f8;">إشارة</span></a>
+        <p>محاضرة واحدة، مفهومة لكل طالب</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>صفحات المشروع</h4>
+          <a href="/problem.html">المشكلة</a>
+          <a href="/solution.html">الحل</a>
+          <a href="/how-it-works.html">كيف يعمل</a>
+          <a href="/about.html">عن المشروع</a>
+          <a href="/contact.html">تواصل معنا</a>
+        </div>
+        <div class="footer-col">
+          <h4>تجربة المنصة</h4>
+          <a href="/ar/lecturer">المحاضر</a>
+          <a href="/ar/student/deaf">الطالب الأصم</a>
+          <a href="/ar/student/blind">الطالب الكفيف</a>
+          <a href="/ar/student/sighted">الطالب المبصر</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <p>© 2025 إشارة — مشروع إدوثون 3، جامعة الملك خالد</p>
+      <p>صُنع بـ <span style="color:var(--teal)">♥</span> في السعودية</p>
+    </div>
+  </div>
+</footer>
+
+<script src="/shared.js"></script>
+<script>
+  function simDemo() {
+    var btn = document.getElementById('demo-btn');
+    var spin = document.getElementById('demo-spin');
+    var result = document.getElementById('demo-result');
+
+    btn.disabled = true;
+    btn.textContent = '⏳ جارٍ التحليل...';
+    spin.style.display = 'flex';
+    result.style.display = 'none';
+
+    setTimeout(function () {
+      spin.style.display = 'none';
+      result.style.display = 'block';
+      btn.textContent = '✓ اكتملت المحاكاة';
+    }, 2600);
+  }
+</script>
+
+</body>
+</html>

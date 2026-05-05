@@ -1,25 +1,26 @@
-"use client";
-
-import Link from "next/link";
-import { useLocale, useTranslations } from "next-intl";
-import { usePathname } from "next/navigation";
+import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { LanguageToggle } from "@/components/language-toggle";
 import { Moon, Sun, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export function Navbar() {
-  const locale = useLocale();
-  const t = useTranslations();
-  const pathname = usePathname();
-  const [dark, setDark] = useState(false);
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
+  const location = useLocation();
+  const pathname = location.pathname;
+  const [dark, setDark] = useState(true);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("theme");
-    if (stored === "dark" || (!stored && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-      setDark(true);
-      document.documentElement.classList.add("dark");
+    const preferLight = stored === "light";
+    if (preferLight) {
+      setDark(false);
+      document.documentElement.classList.add("light");
+    } else {
+      document.documentElement.classList.remove("light");
     }
     const onScroll = () => setScrolled(window.scrollY > 12);
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -29,7 +30,7 @@ export function Navbar() {
   const toggleDark = () => {
     setDark((d) => {
       const next = !d;
-      document.documentElement.classList.toggle("dark", next);
+      document.documentElement.classList.toggle("light", !next);
       localStorage.setItem("theme", next ? "dark" : "light");
       return next;
     });
@@ -38,7 +39,7 @@ export function Navbar() {
   const isHeroPage = pathname === `/${locale}`;
   const navLinks = [
     { href: `/${locale}/lecturer`, label: t("nav.lecturer") },
-    { href: `/${locale}/student/deaf`,  label: locale === "ar" ? "الطالب الأصم" : "Deaf Student" },
+    { href: `/${locale}/student/deaf`, label: locale === "ar" ? "الطالب الأصم" : "Deaf Student" },
     { href: `/${locale}/student/blind`, label: locale === "ar" ? "الطالب الكفيف" : "Blind Student" },
   ];
 
@@ -55,16 +56,13 @@ export function Navbar() {
         }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5">
-          {/* Logo */}
           <Link
-            href={`/${locale}`}
+            to={`/${locale}`}
             className="flex items-center gap-2.5 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             aria-label={t("app.name")}
           >
             <div className="h-9 w-9 rounded-xl gradient-primary flex items-center justify-center shadow-md ring-2 ring-white/10">
-              <span className={`text-lg font-black leading-none ${isHeroPage && !scrolled ? "text-white" : "text-white"}`}>
-                إ
-              </span>
+              <span className="text-lg font-black leading-none text-white">إ</span>
             </div>
             <div className="flex flex-col leading-none">
               <span className={`text-base font-black tracking-tight ${isHeroPage && !scrolled ? "text-white" : "text-primary"}`}>
@@ -76,14 +74,13 @@ export function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => {
               const active = pathname.startsWith(link.href);
               return (
                 <Link
                   key={link.href}
-                  href={link.href}
+                  to={link.href}
                   className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-150 ${
                     active
                       ? "bg-primary/10 text-primary"
@@ -98,7 +95,6 @@ export function Navbar() {
             })}
           </div>
 
-          {/* Actions */}
           <div className="flex items-center gap-2">
             <button
               onClick={toggleDark}
@@ -114,7 +110,6 @@ export function Navbar() {
 
             <LanguageToggle subtle={isHeroPage && !scrolled} />
 
-            {/* Mobile menu toggle */}
             <button
               onClick={() => setMenuOpen((o) => !o)}
               aria-label="Toggle menu"
@@ -129,13 +124,12 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Mobile menu */}
         {menuOpen && (
           <div className="md:hidden glass border-t border-[var(--card-border)] px-5 pb-4 flex flex-col gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
-                href={link.href}
+                to={link.href}
                 onClick={() => setMenuOpen(false)}
                 className="px-4 py-2.5 rounded-xl text-sm font-medium text-[var(--fg)] hover:text-primary hover:bg-primary/6 transition-colors"
               >

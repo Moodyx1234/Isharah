@@ -1,0 +1,223 @@
+{
+  "app": {
+    "name": "Isharah",
+    "tagline": "One lecture, understood by every student",
+    "description": "An AI platform making university lectures accessible to deaf and blind students in real-time"
+  },
+  "nav": {
+    "lecturer": "Lecturer",
+    "student": "Student",
+    "home": "Home",
+    "about": "About"
+  },
+  "landing": {
+    "hero": {
+      "badge": "Eduthon 3 — King Khalid University",
+      "title": "Isharah",
+      "subtitle": "One lecture, understood by every student",
+      "description": "An AI platform that translates university lectures into 3D sign language for deaf students, and provides intelligent audio descriptions of visual content for blind students — all in real-time.",
+      "cta_primary": "Enter Demo",
+      "cta_secondary": "Learn More",
+      "stats": {
+        "deaf_blind": "2.7M+",
+        "deaf_blind_label": "Deaf & blind in Saudi Arabia",
+        "universities": "30+",
+        "universities_label": "Saudi universities",
+        "accessibility": "Zero",
+        "accessibility_label": "Specialized accessibility tools"
+      }
+    },
+    "problem": {
+      "title": "The Problem We're Solving",
+      "description": "Over 2.7 million students with hearing or visual disabilities in Saudi Arabia face enormous barriers in university education. No specialized tools make lectures truly accessible to them.",
+      "points": [
+        "Deaf students cannot follow spoken lecture content",
+        "Blind students cannot understand visual content",
+        "Existing technologies are generic and lack proper Arabic support"
+      ]
+    },
+    "features": {
+      "title": "A solution designed for every student",
+      "deaf": {
+        "title": "Deaf Student",
+        "description": "A real-time 3D avatar translating the lecture into Saudi Sign Language, with synchronized captions.",
+        "features": ["3D signing avatar", "Real-time captions", "Raise hand interaction"]
+      },
+      "blind": {
+        "title": "Blind Student",
+        "description": "AI-generated audio descriptions of slides and visual content, with full voice command and keyboard support.",
+        "features": ["AI slide descriptions", "Voice commands", "Full keyboard navigation"]
+      },
+      "sighted": {
+        "title": "Sighted Student",
+        "description": "Live captions and auto-generated summaries every 2 minutes, plus a review question bank at session end.",
+        "features": ["Live captions", "Auto summaries", "AI review questions"]
+      }
+    },
+    "how_it_works": {
+      "title": "How Isharah Works",
+      "steps": [
+        {
+          "number": "01",
+          "title": "Lecturer starts session",
+          "description": "The lecturer opens the dashboard and starts a session to get a unique code"
+        },
+        {
+          "number": "02",
+          "title": "Students join",
+          "description": "Each student enters the session code and chooses their preferred interface type"
+        },
+        {
+          "number": "03",
+          "title": "AI works in real-time",
+          "description": "Claude analyzes speech and images and generates appropriate content for each student"
+        },
+        {
+          "number": "04",
+          "title": "Learning without barriers",
+          "description": "Every student receives the lecture in the way that suits them in real-time"
+        }
+      ]
+    },
+    "cta": {
+      "title": "Ready to experience Isharah?",
+      "description": "Start a demo now and see how AI can make education accessible to everyone.",
+      "lecturer_btn": "Enter as Lecturer",
+      "deaf_btn": "Enter as Deaf Student",
+      "blind_btn": "Enter as Blind Student",
+      "sighted_btn": "Enter as Sighted Student"
+    },
+    "footer": {
+      "tagline": "Education without barriers",
+      "built_for": "Built for Eduthon 3 — King Khalid University",
+      "powered_by": "Powered by Claude AI from Anthropic"
+    }
+  },
+  "student": {
+    "deaf": "Deaf Student View",
+    "blind": "Blind Student View",
+    "sighted": "Sighted Student View"
+  },
+  "session": {
+    "start": "Start session",
+    "end": "End session",
+    "join": "Join session",
+    "code": "Session code",
+    "code_placeholder": "Enter session code",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "connecting": "Connecting...",
+    "waiting": "Waiting for session to start...",
+    "active": "Session active",
+    "ended": "Session ended",
+    "id": "Session ID",
+    "share_code": "Share this code with students",
+    "students_connected": "student connected",
+    "no_students": "No students connected yet"
+  },
+  "lecturer": {
+    "title": "Lecturer Dashboard",
+    "microphone": "Microphone",
+    "mic_start": "Start Recording",
+    "mic_stop": "Stop Recording",
+    "mic_denied": "Microphone permission denied",
+    "mic_fallback": "Cannot access microphone. Use Demo Mode instead.",
+    "upload_slide": "Upload Slide",
+    "upload_hint": "Drag & drop a slide image here or click to choose",
+    "transcript": "Live Transcript",
+    "transcript_empty": "Speech-to-text will appear here when recording starts...",
+    "students": "Connected Students",
+    "hand_raised": "raised hand",
+    "demo_mode": "Demo Mode",
+    "demo_mode_desc": "Replays a sample lecture transcript at realistic speed",
+    "demo_start": "Start Demo",
+    "demo_stop": "Stop Demo",
+    "api_missing": "Anthropic API Key Missing",
+    "api_missing_desc": "Please add ANTHROPIC_API_KEY to your .env.local file to enable AI features.",
+    "slide_described": "Slide described",
+    "processing": "Processing...",
+    "rephrasing": "Rephrasing for sign language..."
+  },
+  "deaf_view": {
+    "title": "Deaf Student View",
+    "avatar_label": "Sign language avatar",
+    "captions": "Captions",
+    "captions_live": "Live captions",
+    "transcript": "Transcript History",
+    "transcript_empty": "Captions will appear here when the session starts",
+    "raise_hand": "Raise Hand",
+    "hand_raised_msg": "Hand raise signal sent",
+    "join_prompt": "Enter session code to join",
+    "avatar_idle": "Waiting for lecturer...",
+    "avatar_signing": "Signing",
+    "connection_error": "Could not connect to session"
+  },
+  "blind_view": {
+    "title": "Blind Student View",
+    "welcome": "Welcome. Press Space to start listening, or say a voice command.",
+    "voice_commands": "Available Voice Commands",
+    "commands": {
+      "whats_happening": "What's happening now?",
+      "repeat": "Repeat last point",
+      "pause": "Pause",
+      "summary": "Summary so far"
+    },
+    "keyboard_shortcuts": "Keyboard Shortcuts",
+    "shortcuts": {
+      "space": "Space: toggle listening",
+      "r": "R: repeat last point",
+      "d": "D: describe current slide",
+      "s": "S: session summary"
+    },
+    "listening": "Listening...",
+    "not_listening": "Click to listen",
+    "current_narration": "Current Narration",
+    "narration_empty": "Audio narration will begin when you join a session",
+    "describe_btn": "Describe Current Slide",
+    "repeat_btn": "Repeat Last Point",
+    "join_prompt": "Enter session code to join"
+  },
+  "sighted_view": {
+    "title": "Sighted Student View",
+    "live_captions": "Live Captions",
+    "summary": "Session Summary",
+    "summary_auto": "A summary is generated automatically every 2 minutes",
+    "questions": "Review Questions",
+    "questions_empty": "Review questions will appear at the end of the session",
+    "download_pdf": "Download PDF",
+    "download_audio": "Download Audio",
+    "join_prompt": "Enter session code to join"
+  },
+  "summary": {
+    "generating": "Generating summary...",
+    "title": "Lecture Summary",
+    "key_points": "Key Points",
+    "review_questions": "Review Questions",
+    "download": "Download Summary"
+  },
+  "errors": {
+    "mic_denied": "Microphone permission denied. Please allow access in browser settings.",
+    "session_not_found": "Session not found. Check the code and try again.",
+    "session_ended": "Session has ended. Thank you for attending.",
+    "api_error": "An error occurred processing the request. Please try again.",
+    "connection_lost": "Connection lost. Reconnecting...",
+    "browser_unsupported": "Your browser doesn't support this feature. Please use Chrome or Edge."
+  },
+  "common": {
+    "loading": "Loading...",
+    "back": "Back",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "language": "Language",
+    "arabic": "العربية",
+    "english": "English",
+    "dark_mode": "Dark Mode",
+    "light_mode": "Light Mode",
+    "or": "or",
+    "and": "and",
+    "join": "Join",
+    "enter": "Enter"
+  }
+}

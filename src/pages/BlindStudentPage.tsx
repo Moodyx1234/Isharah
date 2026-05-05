@@ -1,16 +1,19 @@
-"use client";
-
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useTranslations, useLocale } from "next-intl";
-import { Navbar } from "@/components/nav/Navbar";
-import { Badge } from "@/components/ui/badge";
+import { useTranslation } from "react-i18next";
 import { getSocket, EVENTS } from "@/lib/socket-client";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, MicOff, Volume2, VolumeX, RotateCcw, Monitor, FileText, Wifi, WifiOff, Eye } from "lucide-react";
+import { Mic, MicOff, Volume2, VolumeX, RotateCcw, Monitor, FileText, Wifi, WifiOff, Eye, ArrowLeft, ArrowRight } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
+
+const AMBER = "#f59e0b";
+const AMBER_DARK = "#110900";
 
 export default function BlindStudentPage() {
-  const t = useTranslations();
-  const locale = useLocale();
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
+  const { locale: routeLocale = "ar" } = useParams<{ locale: string }>();
+  const isAr = routeLocale === "ar";
+  const BackArrow = isAr ? ArrowRight : ArrowLeft;
 
   const [sessionCode, setSessionCode] = useState("");
   const [joined, setJoined] = useState(false);
@@ -154,28 +157,59 @@ export default function BlindStudentPage() {
 
   if (!joined) {
     return (
-      <div className="min-h-screen flex flex-col" style={{ background: "#080d17" }}>
-        <Navbar />
-        <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-6 sm:py-10">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="w-full max-w-md"
+      <div className="min-h-screen flex flex-col" style={{ background: `linear-gradient(160deg, ${AMBER_DARK} 0%, #0a0600 100%)` }}>
+        <header className="flex items-center justify-between px-6 py-4">
+          <Link
+            to={`/${routeLocale}/login`}
+            className="flex items-center gap-2 text-sm transition-colors"
+            style={{ color: "rgba(255,255,255,0.4)" }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.8)"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.4)"; }}
           >
-            <div className="rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 sm:p-8 shadow-2xl shadow-black/60">
-              {/* Role icon */}
+            <BackArrow size={15} />
+            {isAr ? "رجوع" : "Back"}
+          </Link>
+          <div
+            className="flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold"
+            style={{ background: `${AMBER}22`, color: AMBER, border: `1px solid ${AMBER}33` }}
+          >
+            <Eye size={13} />
+            {isAr ? "طالب كفيف" : "Blind Student"}
+          </div>
+        </header>
+
+        <main className="flex-1 flex items-center justify-center px-4 py-10">
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45 }}
+            className="w-full max-w-sm"
+          >
+            <div
+              className="rounded-3xl p-8 shadow-2xl"
+              style={{
+                background: "linear-gradient(135deg, #1a0d00 0%, rgba(26,14,0,0.95) 100%)",
+                border: `1px solid ${AMBER}33`,
+                boxShadow: `0 25px 80px rgba(245,158,11,0.2)`,
+              }}
+            >
               <div className="flex justify-center mb-6">
-                <div className="relative h-14 sm:h-16 w-14 sm:w-16 rounded-2xl bg-accent/20 border border-accent/30 flex items-center justify-center shadow-xl shadow-accent/20">
-                  <Eye size={26} sm:size={28} className="text-accent" aria-hidden />
-                  <span className="absolute inset-0 rounded-2xl border-2 border-accent/15 animate-ping" />
+                <div
+                  className="relative h-16 w-16 rounded-2xl flex items-center justify-center shadow-2xl"
+                  style={{ background: `${AMBER}18`, border: `1px solid ${AMBER}44` }}
+                >
+                  <Eye size={30} style={{ color: AMBER }} />
+                  <span
+                    className="absolute inset-0 rounded-2xl animate-ping opacity-15"
+                    style={{ border: `2px solid ${AMBER}` }}
+                  />
                 </div>
               </div>
 
-              <h1 className="text-xl sm:text-2xl font-black text-white text-center mb-2">
+              <h1 className="text-2xl font-black text-white text-center mb-2">
                 {t("blind_view.title")}
               </h1>
-              <p className="text-white/40 text-center text-xs sm:text-sm mb-6 sm:mb-7">
+              <p className="text-center text-sm mb-7" style={{ color: "rgba(255,255,255,0.4)" }}>
                 {t("blind_view.join_prompt")}
               </p>
 
@@ -187,7 +221,7 @@ export default function BlindStudentPage() {
                     exit={{ opacity: 0, height: 0 }}
                     className="overflow-hidden mb-4"
                   >
-                    <div className="rounded-lg sm:rounded-xl bg-red-500/15 border border-red-500/30 p-3 text-xs sm:text-sm text-red-300 text-center" role="alert">
+                    <div className="rounded-xl bg-red-500/15 border border-red-500/30 p-3 text-sm text-red-300 text-center" role="alert">
                       {t("errors.session_not_found")}
                     </div>
                   </motion.div>
@@ -200,22 +234,25 @@ export default function BlindStudentPage() {
                   onChange={(e) => setSessionCode(e.target.value.toUpperCase())}
                   placeholder={t("session.code_placeholder")}
                   maxLength={6}
-                  className="flex-1 h-11 sm:h-12 rounded-lg sm:rounded-xl border border-white/15 bg-white/8 px-3 sm:px-4 text-center text-xl sm:text-2xl font-mono tracking-[0.3em] uppercase text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/50 transition-colors"
+                  className="flex-1 h-12 rounded-xl px-4 text-center text-2xl font-mono tracking-[0.3em] uppercase text-white placeholder:text-white/20 focus:outline-none transition-colors"
+                  style={{ background: "rgba(255,255,255,0.06)", border: `1px solid ${AMBER}44` }}
+                  onFocus={(e) => { (e.target as HTMLInputElement).style.borderColor = `${AMBER}99`; (e.target as HTMLInputElement).style.boxShadow = `0 0 0 2px ${AMBER}22`; }}
+                  onBlur={(e) => { (e.target as HTMLInputElement).style.borderColor = `${AMBER}44`; (e.target as HTMLInputElement).style.boxShadow = "none"; }}
                   onKeyDown={(e) => { if (e.key === "Enter") joinSession(); }}
                   aria-label={t("session.code")}
                   autoFocus
                 />
                 <button
                   onClick={joinSession}
-                  className="h-11 sm:h-12 px-4 sm:px-5 rounded-lg sm:rounded-xl bg-accent font-bold text-white shadow-lg shadow-accent/30 hover:bg-accent-dark transition-colors active:scale-[0.97] shrink-0 text-sm sm:text-base"
+                  className="h-12 px-5 rounded-xl font-bold text-black shadow-lg transition-all active:scale-[0.97] shrink-0"
+                  style={{ background: AMBER, boxShadow: `0 6px 24px ${AMBER}55` }}
                 >
                   {t("common.join")}
                 </button>
               </div>
 
-              {/* Keyboard hint */}
-              <p className="mt-5 text-center text-xs text-white/25">
-                {locale === "ar" ? "متوافق مع قارئات الشاشة • تنقل كامل بلوحة المفاتيح" : "Screen reader compatible • Full keyboard navigation"}
+              <p className="mt-5 text-center text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>
+                {isAr ? "متوافق مع قارئات الشاشة • تنقل كامل بلوحة المفاتيح" : "Screen reader compatible • Full keyboard navigation"}
               </p>
             </div>
           </motion.div>
@@ -225,44 +262,72 @@ export default function BlindStudentPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "#08090f", color: "#f0ebe3" }}>
-      {/* ARIA live region */}
+    <div className="min-h-screen flex flex-col" style={{ background: "#09070f", color: "#f0ebe3" }}>
       <div role="status" aria-live="assertive" aria-atomic="true" className="sr-only">
         {ariaAnnouncement}
       </div>
 
-      <Navbar />
-
-      <main className="flex-1 mx-auto w-full max-w-3xl px-3 sm:px-4 py-6 sm:py-8 flex flex-col gap-5 sm:gap-7" id="main-content">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="min-w-0">
-            <h1 className="text-lg sm:text-2xl font-black text-white truncate">{t("blind_view.title")}</h1>
-            <p className="text-white/40 text-xs sm:text-sm mt-0.5">{t("blind_view.welcome")}</p>
+      <header
+        className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b shrink-0"
+        style={{ borderColor: `${AMBER}18` }}
+      >
+        <div className="flex items-center gap-2.5">
+          <div
+            className="h-8 w-8 rounded-xl flex items-center justify-center"
+            style={{ background: `${AMBER}18`, border: `1px solid ${AMBER}33` }}
+          >
+            <Eye size={16} style={{ color: AMBER }} />
           </div>
-          <Badge variant={connected ? "success" : "error"} className="gap-1 shrink-0">
-            {connected ? <Wifi size={10} aria-hidden /> : <WifiOff size={10} aria-hidden />}
-            <span className="text-xs">{connected ? t("session.connected") : t("session.connecting")}</span>
-          </Badge>
+          <div>
+            <p className="text-white font-black text-sm leading-none">{t("blind_view.title")}</p>
+            <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>{t("blind_view.welcome")}</p>
+          </div>
         </div>
 
-        {/* Big mic button */}
-        <div className="flex flex-col items-center gap-3 sm:gap-4">
+        <div
+          className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium"
+          style={{
+            background: connected ? "rgba(16,185,129,0.12)" : "rgba(239,68,68,0.12)",
+            color: connected ? "#10b981" : "#ef4444",
+            border: `1px solid ${connected ? "rgba(16,185,129,0.25)" : "rgba(239,68,68,0.25)"}`,
+          }}
+        >
+          {connected ? <Wifi size={11} /> : <WifiOff size={11} />}
+          <span>{connected ? t("session.connected") : t("session.connecting")}</span>
+        </div>
+      </header>
+
+      <main className="flex-1 mx-auto w-full max-w-2xl px-4 py-6 sm:py-10 flex flex-col gap-6 sm:gap-8" id="main-content">
+
+        <div className="flex flex-col items-center gap-4 sm:gap-5">
           <button
             onClick={toggleListening}
             aria-label={isListening ? t("blind_view.listening") : t("blind_view.not_listening")}
             aria-pressed={isListening}
-            className={`relative h-28 sm:h-36 w-28 sm:w-36 rounded-full flex items-center justify-center text-white transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent/50 ${
-              isListening
-                ? "bg-accent shadow-[0_0_0_8px_rgba(232,152,94,0.18),0_0_0_18px_rgba(232,152,94,0.08)]"
-                : "bg-white/8 border-2 border-white/15 hover:bg-white/12 hover:border-white/25"
-            }`}
+            className="relative flex items-center justify-center rounded-full transition-all duration-300 focus-visible:outline-none"
+            style={{
+              height: "10rem",
+              width: "10rem",
+              background: isListening ? AMBER : "rgba(245,158,11,0.08)",
+              border: isListening ? `3px solid ${AMBER}` : `2px solid ${AMBER}33`,
+              boxShadow: isListening
+                ? `0 0 0 12px ${AMBER}18, 0 0 0 28px ${AMBER}09, 0 20px 60px ${AMBER}33`
+                : "none",
+            }}
           >
-            {isListening ? <MicOff size={36} sm:size={46} aria-hidden /> : <Mic size={36} sm:size={46} aria-hidden />}
-            {isListening && <span className="absolute inset-0 rounded-full bg-accent animate-ping opacity-15" />}
+            {isListening
+              ? <MicOff size={52} style={{ color: "#0a0700" }} aria-hidden />
+              : <Mic size={52} style={{ color: AMBER }} aria-hidden />
+            }
+            {isListening && (
+              <span
+                className="absolute inset-0 rounded-full animate-ping opacity-20"
+                style={{ background: AMBER }}
+              />
+            )}
           </button>
 
-          <p className="text-sm sm:text-base font-medium text-white/60">
+          <p className="text-base font-semibold" style={{ color: "rgba(255,255,255,0.55)" }}>
             {isListening ? t("blind_view.listening") : t("blind_view.not_listening")}
           </p>
 
@@ -272,7 +337,8 @@ export default function BlindStudentPage() {
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="text-sm font-medium text-accent"
+                className="text-sm font-bold"
+                style={{ color: AMBER }}
                 role="status"
                 aria-live="polite"
               >
@@ -282,86 +348,108 @@ export default function BlindStudentPage() {
           </AnimatePresence>
         </div>
 
-        {/* Action buttons grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
           {[
-            { icon: <RotateCcw size={18} sm:size={20} />, label: t("blind_view.repeat_btn"), shortcut: "R", onClick: () => speak((locale === "ar" ? "تكرار: " : "Repeating: ") + lastNarrationRef.current, true) },
-            { icon: <Monitor size={18} sm:size={20} />, label: t("blind_view.describe_btn"), shortcut: "D", onClick: describeCurrentSlide },
-            { icon: <FileText size={18} sm:size={20} />, label: locale === "ar" ? "ملخص" : "Summary", shortcut: "S", onClick: () => speak(locale === "ar" ? "طلب الملخص..." : "Requesting summary...", true) },
-            { icon: isSpeaking ? <VolumeX size={18} sm:size={20} /> : <Volume2 size={18} sm:size={20} />, label: isSpeaking ? (locale === "ar" ? "إيقاف" : "Pause") : (locale === "ar" ? "تشغيل" : "Play"), shortcut: "P", onClick: () => { if (isSpeaking) { synthRef.current?.cancel(); setIsSpeaking(false); } } },
+            { icon: <RotateCcw size={22} />, label: t("blind_view.repeat_btn"), shortcut: "R", onClick: () => speak((locale === "ar" ? "تكرار: " : "Repeating: ") + lastNarrationRef.current, true) },
+            { icon: <Monitor size={22} />, label: t("blind_view.describe_btn"), shortcut: "D", onClick: describeCurrentSlide },
+            { icon: <FileText size={22} />, label: locale === "ar" ? "ملخص" : "Summary", shortcut: "S", onClick: () => speak(locale === "ar" ? "طلب الملخص..." : "Requesting summary...", true) },
+            { icon: isSpeaking ? <VolumeX size={22} /> : <Volume2 size={22} />, label: isSpeaking ? (locale === "ar" ? "إيقاف" : "Pause") : (locale === "ar" ? "تشغيل" : "Play"), shortcut: "P", onClick: () => { if (isSpeaking) { synthRef.current?.cancel(); setIsSpeaking(false); } } },
           ].map(({ icon, label, shortcut, onClick }) => (
             <button
               key={shortcut}
               onClick={onClick}
               aria-label={`${label} (${shortcut})`}
-              className="flex flex-col items-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-2xl border border-white/10 bg-white/5 px-2 sm:px-4 py-3 sm:py-5 hover:bg-white/8 hover:border-white/18 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 active:scale-[0.97]"
+              className="flex flex-col items-center gap-2 rounded-2xl px-2 py-4 transition-all active:scale-[0.97] focus-visible:outline-none"
+              style={{
+                background: `${AMBER}0a`,
+                border: `1px solid ${AMBER}22`,
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = `${AMBER}16`; (e.currentTarget as HTMLElement).style.borderColor = `${AMBER}44`; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = `${AMBER}0a`; (e.currentTarget as HTMLElement).style.borderColor = `${AMBER}22`; }}
             >
-              <div className="text-white/70">{icon}</div>
-              <span className="text-xs leading-tight text-white/50">{label}</span>
-              <kbd className="rounded-md bg-white/8 border border-white/12 px-1 py-0.5 text-xs sm:text-[10px] font-mono text-white/35 font-bold">
+              <div style={{ color: AMBER }}>{icon}</div>
+              <span className="text-xs text-center leading-tight" style={{ color: "rgba(255,255,255,0.5)" }}>{label}</span>
+              <kbd
+                className="rounded-lg px-2 py-0.5 text-xs font-mono font-bold"
+                style={{ background: `${AMBER}18`, color: `${AMBER}cc`, border: `1px solid ${AMBER}33` }}
+              >
                 {shortcut}
               </kbd>
             </button>
           ))}
         </div>
 
-        {/* Current narration */}
-        <div className="rounded-lg sm:rounded-2xl border border-white/10 bg-white/4 p-4 sm:p-6">
-          <div className="flex items-center gap-2 mb-3 sm:mb-4">
-            <p className="text-xs font-semibold text-white/35 uppercase tracking-wider flex-1">
+        <div
+          className="rounded-2xl p-5 sm:p-6"
+          style={{ background: `${AMBER}07`, border: `1px solid ${AMBER}18` }}
+        >
+          <div className="flex items-center gap-2 mb-4">
+            <p className="text-xs font-bold uppercase tracking-wider flex-1" style={{ color: `${AMBER}80` }}>
               {t("blind_view.current_narration")}
             </p>
             {isSpeaking && (
-              <div className="flex items-end gap-0.5 h-4 sm:h-5" aria-hidden>
+              <div className="flex items-end gap-0.5 h-5" aria-hidden>
                 {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-                  <span key={i} className="waveform-bar w-0.5 sm:w-1 bg-accent/60 rounded-full" style={{ animationDelay: `${i * 0.08}s`, height: `${8 + (i % 3) * 4}px` }} />
+                  <span
+                    key={i}
+                    className="waveform-bar w-1 rounded-full"
+                    style={{ animationDelay: `${i * 0.08}s`, height: `${8 + (i % 3) * 4}px`, background: AMBER }}
+                  />
                 ))}
               </div>
             )}
           </div>
           <p
-            className={`text-base sm:text-lg leading-relaxed transition-colors ${isSpeaking ? "text-white" : "text-white/35"}`}
+            className="text-lg sm:text-xl leading-relaxed font-medium transition-colors"
+            style={{ color: isSpeaking ? "#fff" : "rgba(255,255,255,0.3)" }}
             aria-live="polite"
           >
             {currentNarration || t("blind_view.narration_empty")}
           </p>
         </div>
 
-        {/* Keyboard shortcuts */}
-        <div className="rounded-lg sm:rounded-2xl border border-white/8 bg-white/3 p-4 sm:p-6">
-          <p className="text-xs font-semibold text-white/30 uppercase tracking-wider mb-3 sm:mb-4">
+        <div
+          className="rounded-2xl p-5 sm:p-6"
+          style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
+        >
+          <p className="text-xs font-bold uppercase tracking-wider mb-4" style={{ color: "rgba(255,255,255,0.28)" }}>
             {t("blind_view.keyboard_shortcuts")}
           </p>
-          <dl className="grid grid-cols-2 gap-2 sm:gap-3">
+          <dl className="grid grid-cols-2 gap-3">
             {[
               { key: "Space", desc: t("blind_view.shortcuts.space") },
               { key: "R", desc: t("blind_view.shortcuts.r") },
               { key: "D", desc: t("blind_view.shortcuts.d") },
               { key: "S", desc: t("blind_view.shortcuts.s") },
             ].map(({ key, desc }) => (
-              <div key={key} className="flex items-center gap-2">
-                <kbd className="rounded-lg bg-white/8 px-2 py-1 text-xs font-mono font-bold text-white/60 border border-white/12 shrink-0">
+              <div key={key} className="flex items-center gap-2.5">
+                <kbd
+                  className="rounded-xl px-2.5 py-1.5 text-xs font-mono font-black shrink-0"
+                  style={{ background: `${AMBER}18`, color: AMBER, border: `1px solid ${AMBER}33` }}
+                >
                   {key}
                 </kbd>
-                <span className="text-xs sm:text-sm text-white/45">{desc}</span>
+                <span className="text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>{desc}</span>
               </div>
             ))}
           </dl>
         </div>
 
-        {/* Slide description */}
         {slideDescription && (
-          <div className="rounded-lg sm:rounded-2xl border border-accent/25 bg-accent/8 p-4 sm:p-6">
-            <p className="text-xs font-semibold text-accent/60 uppercase tracking-wider mb-2">
+          <div
+            className="rounded-2xl p-5 sm:p-6"
+            style={{ background: `${AMBER}0a`, border: `1px solid ${AMBER}30` }}
+          >
+            <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: `${AMBER}80` }}>
               {locale === "ar" ? "وصف الشريحة" : "Slide Description"}
             </p>
-            <p className="text-sm sm:text-base leading-relaxed text-white/85">{slideDescription}</p>
+            <p className="text-sm sm:text-base leading-relaxed" style={{ color: "rgba(255,255,255,0.85)" }}>{slideDescription}</p>
           </div>
         )}
 
         {sessionEnded && (
-          <div className="rounded-lg sm:rounded-2xl border border-yellow-500/25 bg-yellow-500/8 p-4 sm:p-5 text-center" role="alert">
-            <p className="text-xs sm:text-sm text-yellow-300/80">{t("errors.session_ended")}</p>
+          <div className="rounded-2xl border border-yellow-500/25 bg-yellow-500/8 p-4 text-center" role="alert">
+            <p className="text-sm text-yellow-300/80">{t("errors.session_ended")}</p>
           </div>
         )}
       </main>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>كيف يعمل | إشارة</title>
+  <meta name="description" content="أربع خطوات بسيطة تجعل المحاضرة الجامعية في متناول كل طالب" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=IBM+Plex+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared.css" />
+  <style>
+    /* ── page-level overrides ── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      position: relative;
+    }
+    @media (max-width: 1024px) {
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .steps-grid { grid-template-columns: 1fr; }
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .step-card:hover {
+      border-color: rgba(0, 201, 167, 0.35);
+      transform: translateY(-4px);
+    }
+
+    .step-num {
+      font-family: var(--font-h, 'Tajawal', sans-serif);
+      font-size: 2.6rem;
+      font-weight: 900;
+      color: var(--teal);
+      line-height: 1;
+    }
+
+    .step-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(0, 201, 167, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--teal);
+    }
+
+    .step-card h3 {
+      font-family: var(--font-h, 'Tajawal', sans-serif);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .step-card p {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* ── flow diagram ── */
+    .flow-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0;
+      margin-top: 48px;
+    }
+
+    .flow-node {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 201, 167, 0.2);
+      border-radius: 16px;
+      padding: 18px 24px;
+      text-align: center;
+      min-width: 140px;
+      font-family: var(--font-h, 'Tajawal', sans-serif);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .flow-arrow {
+      color: rgba(0, 201, 167, 0.5);
+      font-size: 1.6rem;
+      padding: 0 12px;
+      user-select: none;
+    }
+
+    .flow-note {
+      margin-top: 32px;
+      background: rgba(0, 201, 167, 0.05);
+      border: 1px solid rgba(0, 201, 167, 0.15);
+      border-radius: 14px;
+      padding: 20px 28px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ── FAQ ── */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 780px;
+      margin: 48px auto 0;
+    }
+
+    .faq-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: border-color 0.25s;
+    }
+
+    .faq-item.open {
+      border-color: rgba(0, 201, 167, 0.3);
+    }
+
+    .faq-q {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      cursor: pointer;
+      font-family: var(--font-h, 'Tajawal', sans-serif);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      gap: 12px;
+      user-select: none;
+    }
+
+    .faq-arrow {
+      color: var(--teal);
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+      flex-shrink: 0;
+    }
+
+    .faq-item.open .faq-arrow {
+      transform: rotate(180deg);
+    }
+
+    .faq-a {
+      display: none;
+      padding: 0 24px 20px;
+      color: var(--muted);
+      font-size: 0.93rem;
+      line-height: 1.75;
+    }
+
+    .faq-item.open .faq-a {
+      display: block;
+    }
+
+    /* ── CTA section ── */
+    .cta-card {
+      max-width: 680px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, rgba(0, 201, 167, 0.07), rgba(0, 201, 167, 0.02));
+      border: 1px solid rgba(0, 201, 167, 0.16);
+      border-radius: 28px;
+      padding: 56px 48px;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .cta-card { padding: 40px 24px; }
+    }
+
+    .cta-logo-icon {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, var(--teal), #00a88a);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-h, 'Tajawal', sans-serif);
+      font-size: 2rem;
+      font-weight: 900;
+      color: #0a0f1a;
+      margin: 0 auto 28px;
+    }
+
+    .cta-card h3 {
+      font-family: var(--font-h, 'Tajawal', sans-serif);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text);
+      margin: 0 0 12px;
+    }
+
+    .cta-card p {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
+      margin: 0 0 32px;
+    }
+
+    .cta-btns {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ── arch section spacing ── */
+    #arch .sec-head p {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.97rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ NAVBAR ══ -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="/ar" class="nav-logo">
+        <div class="logo-icon">إ</div>
+        <div><div class="logo-name">إشارة</div><div class="logo-sub">Isharah</div></div>
+      </a>
+      <div class="nav-links">
+        <a href="/ar" class="nav-link">الرئيسية</a>
+        <a href="/problem.html" class="nav-link">المشكلة</a>
+        <a href="/solution.html" class="nav-link">الحل</a>
+        <a href="/how-it-works.html" class="nav-link active">كيف يعمل</a>
+        <a href="/team.html" class="nav-link">الفريق</a>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <a href="/ar/login" class="btn-p btn-sm">ابدأ الآن</a>
+        <button class="nav-burger" onclick="toggleMenu()" aria-label="القائمة">☰</button>
+      </div>
+    </div>
+    <div class="nav-mobile" id="mobile-menu">
+      <a href="/ar" class="nav-link">الرئيسية</a>
+      <a href="/problem.html" class="nav-link">المشكلة</a>
+      <a href="/solution.html" class="nav-link">الحل</a>
+      <a href="/how-it-works.html" class="nav-link">كيف يعمل</a>
+      <a href="/team.html" class="nav-link">الفريق</a>
+      <a href="/ar/login" class="btn-p btn-sm" style="margin-top:8px;width:fit-content;">ابدأ الآن</a>
+    </div>
+  </nav>
+
+  <!-- ══ HERO ══ -->
+  <section class="hero" style="position:relative;overflow:hidden;min-height:85vh;padding-top:90px;text-align:center;">
+    <div class="blob-bg">
+      <div class="blob blob-1" style="top:-15%;right:-8%;width:min(65vw,700px);height:min(65vw,700px);background:radial-gradient(ellipse,rgba(0,201,167,.15) 0%,transparent 68%);"></div>
+      <div class="blob blob-2" style="bottom:-20%;left:-10%;width:min(60vw,650px);height:min(60vw,650px);background:radial-gradient(ellipse,rgba(20,80,200,.1) 0%,transparent 68%);"></div>
+      <div class="blob blob-3" style="top:30%;left:15%;width:min(40vw,420px);height:min(40vw,420px);background:radial-gradient(ellipse,rgba(245,166,35,.07) 0%,transparent 70%);"></div>
+    </div>
+    <div class="grid-tex"></div>
+
+    <div class="con" style="position:relative;z-index:1;">
+      <div class="hero-badge reveal">العملية</div>
+      <h1 class="hero-title reveal d1">أربع خطوات نحو محاضرة شاملة</h1>
+      <p class="hero-sub reveal d2">بساطة الاستخدام، عمق التأثير</p>
+      <p class="hero-desc reveal d3">من لحظة بدء المحاضرة حتى وصول المحتوى الكامل إلى الطالب — إشارة تعمل في الخلفية بشكل تلقائي.</p>
+      <a href="#steps" class="scroll-down reveal d4" aria-label="انتقل إلى الخطوات">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ══ SECTION 1 — STEPS ══ -->
+  <section id="steps" class="alt">
+    <div class="con">
+      <div class="sec-head">
+        <div class="badge stag reveal">الخطوات</div>
+        <h2 class="reveal d1">من المحاضرة إلى الوصول — في ثوانٍ</h2>
+      </div>
+
+      <div class="steps-grid">
+
+        <!-- Step 1 -->
+        <div class="step-card reveal">
+          <div class="step-num">١</div>
+          <div class="step-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </div>
+          <h3>رفع المحاضرة</h3>
+          <p>يرفع المحاضر الشرائح أو يبث الشاشة مباشرة. يمكنه أيضاً تفعيل التعرف على الصوت لنقل المحتوى الشفهي.</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-card reveal d1">
+          <div class="step-num">٢</div>
+          <div class="step-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"></path>
+              <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"></path>
+            </svg>
+          </div>
+          <h3>تحليل الذكاء الاصطناعي</h3>
+          <p>تعالج خوارزميات إشارة الصوت والمحتوى البصري في الوقت الفعلي — OCR للشرائح ومعالجة لغة طبيعية للنص.</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-card reveal d2">
+          <div class="step-num">٣</div>
+          <div class="step-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          </div>
+          <h3>ترجمة فورية</h3>
+          <p>المحتوى يتحول إلى لغة إشارة ثلاثية الأبعاد للطلاب الصم، أو وصف صوتي ذكي للطلاب المكفوفين — تلقائياً.</p>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step-card reveal d3">
+          <div class="step-num">٤</div>
+          <div class="step-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+          <h3>وصول الطالب</h3>
+          <p>يتابع كل طالب المحاضرة بالطريقة التي تناسبه — بالإشارة أو بالصوت أو بالترجمة النصية — بشكل مستقل.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SECTION 2 — ARCHITECTURE DIAGRAM ══ -->
+  <section id="arch">
+    <div class="con">
+      <div class="sec-head">
+        <div class="badge stag reveal">المعمارية</div>
+        <h2 class="reveal d1">كيف تتدفق البيانات</h2>
+        <p class="reveal d2">بنية مبسطة توضح مسار المعلومات من مصدرها إلى وجهتها</p>
+      </div>
+
+      <div class="flow-wrap reveal d2">
+        <div class="flow-node">المحاضر 👨‍🏫</div>
+        <div class="flow-arrow">←</div>
+        <div class="flow-node">الخادم<br>Socket.io</div>
+        <div class="flow-arrow">←</div>
+        <div class="flow-node">AI Engine<br>OCR + NLP</div>
+        <div class="flow-arrow">←</div>
+        <div class="flow-node">الطالب 👩‍🎓</div>
+      </div>
+
+      <div class="flow-note reveal d3">
+        ⚡ جميع البيانات تتدفق في الوقت الفعلي عبر WebSocket — زمن استجابة أقل من 200ms
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SECTION 3 — FAQ ══ -->
+  <section id="faq" class="alt">
+    <div class="con">
+      <div class="sec-head">
+        <div class="badge stag center reveal">الأسئلة الشائعة</div>
+        <h2 class="reveal d1">أسئلة يسألها الجميع</h2>
+      </div>
+
+      <div class="faq-list">
+
+        <div class="faq-item reveal">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            هل يشترط اتصال إنترنت سريع؟
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-a">
+            تعمل إشارة بشكل جيد على اتصال متوسط السرعة (10 ميجابت/ثانية). الضغط الأكبر يقع على خادم إشارة، لا على اتصال الطالب.
+          </div>
+        </div>
+
+        <div class="faq-item reveal d1">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            هل يمكن للمحاضر الاستمرار في الشرح بشكل طبيعي؟
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-a">
+            نعم تماماً. المحاضر لا يحتاج لأي تغيير في أسلوبه — إشارة تعمل في الخلفية بشكل كامل دون تدخل منه.
+          </div>
+        </div>
+
+        <div class="faq-item reveal d2">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            ما اللغات التي تدعمها المنصة حالياً؟
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-a">
+            تدعم المنصة اللغة العربية بشكل أساسي مع دعم للغة الإنجليزية. نعمل على إضافة المزيد من اللغات في الإصدارات القادمة.
+          </div>
+        </div>
+
+        <div class="faq-item reveal d3">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            هل البيانات محفوظة وآمنة؟
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-a">
+            جميع البيانات تُعالج في الوقت الفعلي ولا تُخزّن بشكل دائم على خوادمنا إلا بموافقة صريحة من المحاضر لأغراض الأرشفة.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SECTION 4 — CTA ══ -->
+  <section id="cta">
+    <div class="con">
+      <div class="cta-card reveal">
+        <div class="cta-logo-icon">إ</div>
+        <h3>هل أنت مستعد للتجربة؟</h3>
+        <p>ابدأ الآن وشاهد إشارة تعمل في الوقت الفعلي</p>
+        <div class="cta-btns">
+          <a href="/demo.html" class="btn-p">جرّب العرض التجريبي</a>
+          <a href="/ar/login" class="btn-g">ادخل كمحاضر</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer>
+    <div class="con">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="/ar" style="display:flex;align-items:center;gap:10px;">
+            <div class="logo-icon">إ</div>
+            <span style="font-family:var(--font-h);font-weight:900;font-size:1.1rem;color:#f0f4f8;">إشارة</span>
+          </a>
+          <p>محاضرة واحدة، مفهومة لكل طالب</p>
+        </div>
+        <div class="footer-cols">
+          <div class="footer-col">
+            <h4>صفحات المشروع</h4>
+            <a href="/problem.html">المشكلة</a>
+            <a href="/solution.html">الحل</a>
+            <a href="/how-it-works.html">كيف يعمل</a>
+            <a href="/about.html">عن المشروع</a>
+            <a href="/contact.html">تواصل معنا</a>
+          </div>
+          <div class="footer-col">
+            <h4>تجربة المنصة</h4>
+            <a href="/ar/lecturer">المحاضر</a>
+            <a href="/ar/student/deaf">الطالب الأصم</a>
+            <a href="/ar/student/blind">الطالب الكفيف</a>
+            <a href="/ar/student/sighted">الطالب المبصر</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bot">
+        <p>© 2025 إشارة — مشروع إدوثون 3، جامعة الملك خالد</p>
+        <p>صُنع بـ <span style="color:var(--teal)">♥</span> في السعودية</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/shared.js"></script>
+  <script>
+    // FAQ toggle (fallback if shared.js does not define it)
+    if (typeof toggleFaq === 'undefined') {
+      function toggleFaq(btn) {
+        var item = btn.closest('.faq-item');
+        item.classList.toggle('open');
+      }
+    }
+  </script>
+</body>
+</html>
