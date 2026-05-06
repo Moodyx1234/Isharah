@@ -1,0 +1,460 @@
+/* ═══════════════════════════════════════════════════════
+   إشارة — WhoAreYou role-selection page styles
+   Mirrors exact design tokens from LandingPage.tsx LP_CSS
+═══════════════════════════════════════════════════════ */
+
+/* ── Page shell ── */
+.page {
+  min-height: 100vh;
+  background: #071118;
+  color: #f0f4f8;
+  font-family: 'Tajawal', 'IBM Plex Arabic', sans-serif;
+  direction: rtl;
+  overflow-x: hidden;
+}
+
+/* ══════════════════════════════════
+   AMBIENT BACKGROUND
+══════════════════════════════════ */
+.blobBg {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes wyaB1 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  40%     { transform: translate(80px,-60px) scale(1.1); }
+  70%     { transform: translate(-40px,40px) scale(0.95); }
+}
+@keyframes wyaB2 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  30%     { transform: translate(-70px,80px) scale(1.15); }
+  70%     { transform: translate(50px,-30px) scale(0.9); }
+}
+@keyframes wyaB3 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  50%     { transform: translate(60px,70px) scale(1.1); }
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+}
+.blob1 {
+  top: -15%; right: -8%;
+  width: min(65vw, 700px);
+  height: min(65vw, 700px);
+  background: radial-gradient(ellipse, rgba(0,201,160,0.13) 0%, transparent 68%);
+  animation: wyaB1 22s ease-in-out infinite;
+  will-change: transform;
+}
+.blob2 {
+  bottom: -25%; left: -12%;
+  width: min(70vw, 750px);
+  height: min(70vw, 750px);
+  background: radial-gradient(ellipse, rgba(14,50,180,0.08) 0%, transparent 68%);
+  animation: wyaB2 28s ease-in-out infinite;
+  will-change: transform;
+}
+.blob3 {
+  top: 22%; left: 10%;
+  width: min(45vw, 480px);
+  height: min(45vw, 480px);
+  background: radial-gradient(ellipse, rgba(0,201,160,0.05) 0%, transparent 70%);
+  animation: wyaB3 34s ease-in-out infinite;
+  will-change: transform;
+}
+
+.gridTex {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ══════════════════════════════════
+   NAVBAR  (exact match to LandingPage)
+══════════════════════════════════ */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 22px 0;
+  border-bottom: 1px solid transparent;
+  transition:
+    background 0.4s,
+    backdrop-filter 0.4s,
+    border-color 0.4s,
+    padding 0.4s;
+}
+.navStuck {
+  background: rgba(7,17,24,0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom-color: rgba(255,255,255,0.07);
+  padding: 13px 0;
+}
+.navInner {
+  max-width: 1328px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 64px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+.logoIcon {
+  width: 40px; height: 40px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #00c9a7, #009e84);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(0,201,167,0.3);
+  flex-shrink: 0;
+}
+.logoGlyph {
+  color: #fff;
+  font-family: 'Tajawal', sans-serif;
+  font-weight: 900;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+.logoName {
+  font-family: 'Tajawal', sans-serif;
+  font-weight: 900;
+  font-size: 1.15rem;
+  color: #f0f4f8;
+  line-height: 1.2;
+}
+.logoSub {
+  font-size: 0.62rem;
+  color: rgba(240,244,248,0.35);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.navLinks {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+}
+.navLink {
+  color: rgba(240,244,248,0.5);
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s;
+  position: relative;
+  padding-bottom: 3px;
+}
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 0; height: 2px;
+  background: #00c9a7;
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+.navLink:hover { color: #f0f4f8; }
+.navLink:hover::after { width: 100%; }
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ctaBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #00c9a7, #00a888);
+  color: #fff;
+  font-family: 'Tajawal', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 22px;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 18px rgba(0,201,167,0.3);
+}
+.ctaBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 40px rgba(0,201,167,0.55);
+}
+
+.burger {
+  display: none;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #f0f4f8;
+  border-radius: 10px;
+  padding: 7px 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  transition: border-color 0.2s;
+  align-items: center;
+  justify-content: center;
+}
+.burger:hover { border-color: rgba(255,255,255,0.25); }
+
+.mobileMenu {
+  border-top: 1px solid rgba(255,255,255,0.07);
+  background: rgba(7,17,24,0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 12px clamp(20px,5vw,64px) 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.mobileLink {
+  padding: 10px 16px;
+  border-radius: 10px;
+  color: rgba(240,244,248,0.5);
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s, background 0.2s;
+}
+.mobileLink:hover {
+  color: #f0f4f8;
+  background: rgba(255,255,255,0.05);
+}
+
+/* ══════════════════════════════════
+   MAIN CONTENT
+══════════════════════════════════ */
+.main {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120px clamp(20px, 5vw, 64px) 80px;
+}
+
+/* ── Hero heading ── */
+.headingBlock {
+  text-align: center;
+  margin-bottom: 56px;
+  max-width: 640px;
+  width: 100%;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0,201,167,0.08);
+  border: 1px solid rgba(0,201,167,0.22);
+  border-radius: 100px;
+  padding: 8px 20px;
+  color: #00c9a7;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  margin-bottom: 28px;
+}
+
+@keyframes wyaPulseDot {
+  0%,100% { transform: scale(1);   opacity: 1; }
+  50%     { transform: scale(1.6); opacity: 0.55; }
+}
+.badgeDot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #00c9a7;
+  animation: wyaPulseDot 2s ease-in-out infinite;
+  flex-shrink: 0;
+  will-change: transform;
+}
+
+@keyframes wyaShimmer {
+  from { background-position: 200% center; }
+  to   { background-position: -200% center; }
+}
+@keyframes wyaGlow {
+  0%,100% { filter: drop-shadow(0 0 28px rgba(0,201,167,0.4)); }
+  50%     { filter: drop-shadow(0 0 72px rgba(0,201,167,0.75)); }
+}
+
+.heroTitle {
+  font-family: 'Tajawal', 'IBM Plex Arabic', sans-serif;
+  font-size: clamp(3.8rem, 10vw, 6rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+  /* Shimmer gradient text — mirrors LP_CSS hero title exactly */
+  background-image: linear-gradient(
+    135deg,
+    #00c9a7 0%,
+    #a0fae4 38%,
+    #ffffff 56%,
+    #00c9a7 100%
+  );
+  background-size: 280% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation:
+    wyaShimmer 7s linear 0.5s infinite,
+    wyaGlow 4s ease-in-out 1s infinite;
+  will-change: background-position, filter;
+}
+
+.heroSub {
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  font-weight: 500;
+  line-height: 1.75;
+  color: rgba(240,244,248,0.48);
+  margin: 0;
+}
+
+/* ══════════════════════════════════
+   ROLE CARDS GRID
+══════════════════════════════════ */
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  width: 100%;
+  max-width: 720px;
+}
+
+/* Card — glassmorphism shell */
+.cardLink {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 28px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  /* border-color and box-shadow overridden via inline JS on hover */
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.cardLink:hover { transform: translateY(-6px); }
+
+/* Radial sheen that appears on hover */
+.cardSheen {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  border-radius: inherit;
+}
+.cardLink:hover .cardSheen { opacity: 1; }
+
+/* Icon square */
+.cardIcon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  /* bg, border, color set via inline style (per-role accent) */
+  transition: transform 0.3s ease;
+}
+.cardLink:hover .cardIcon { transform: scale(1.1); }
+
+/* Text block */
+.cardTitle {
+  font-family: 'Tajawal', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.25;
+  margin: 0;
+}
+.cardDesc {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.48);
+  line-height: 1.7;
+  margin: 5px 0 0;
+}
+
+/* "ادخل الآن" CTA */
+.cardCta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  /* color set via inline style */
+  margin-top: auto;
+  transition: gap 0.25s ease;
+}
+.cardLink:hover .cardCta { gap: 11px; }
+
+/* ── Footer note ── */
+.footerNote {
+  margin-top: 52px;
+  text-align: center;
+  color: rgba(240,244,248,0.18);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+
+/* ══════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════ */
+@media (max-width: 900px) {
+  .navLinks { display: none; }
+  .burger   { display: flex; }
+}
+@media (max-width: 600px) {
+  .cardsGrid   { grid-template-columns: 1fr; }
+  .heroTitle   { font-size: clamp(3rem, 14vw, 4.5rem); }
+  .main        { padding-top: 100px; }
+}
+
+/* Focus ring — accessible */
+.cardLink:focus-visible {
+  outline: 2px solid #00c9a7;
+  outline-offset: 3px;
+}
+.logo:focus-visible {
+  outline: 2px solid #00c9a7;
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+.navLink:focus-visible {
+  outline: 2px solid #00c9a7;
+  outline-offset: 3px;
+  border-radius: 4px;
+}

@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet, useParams } from "react
 import { useTranslation } from "react-i18next";
 
 const LandingPage = lazy(() => import("./pages/LandingPage"));
-const LoginPage = lazy(() => import("./pages/LoginPage"));
+const WhoAreYou = lazy(() => import("./pages/WhoAreYou"));
 const LecturerPage = lazy(() => import("./pages/LecturerPage"));
 const DeafStudentPage = lazy(() => import("./pages/DeafStudentPage"));
 const BlindStudentPage = lazy(() => import("./pages/BlindStudentPage"));
@@ -36,7 +36,7 @@ export default function App() {
         <Route path="/" element={<Navigate to="/ar" replace />} />
         <Route path="/:locale" element={<LocaleLayout />}>
           <Route index element={<LandingPage />} />
-          <Route path="login" element={<LoginPage />} />
+          <Route path="login" element={<WhoAreYou />} />
           <Route path="lecturer" element={<LecturerPage />} />
           <Route path="student/deaf" element={<DeafStudentPage />} />
           <Route path="student/blind" element={<BlindStudentPage />} />
