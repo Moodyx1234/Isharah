@@ -22,12 +22,14 @@ const ERROR_MESSAGES: Record<string, string> = {
   'service-not-allowed':    'خدمة التعرف على الكلام غير متاحة',
 };
 
-const RECOVERABLE = new Set(['no-speech', 'network', 'aborted']);
+// Non-recoverable: stop the auto-restart loop on these errors
+const NON_RECOVERABLE = new Set(['not-allowed', 'audio-capture', 'language-not-supported', 'service-not-allowed']);
 
 export function useSpeechRecognition({ onResult, onError }: Options) {
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const isListeningRef = useRef(false);
   const accumulatedRef = useRef('');
+  const currentLangRef = useRef('ar-SA');
   const onResultRef    = useRef(onResult);
   const onErrorRef     = useRef(onError);
   onResultRef.current  = onResult;
@@ -36,14 +38,10 @@ export function useSpeechRecognition({ onResult, onError }: Options) {
   const isSupported = (): boolean =>
     !!(window.SpeechRecognition || window.webkitSpeechRecognition);
 
-  const start = (lang = 'ar-SA'): boolean => {
-    if (!isSupported()) return false;
-
-    if (recognitionRef.current) {
-      try { recognitionRef.current.stop(); } catch { /* ignore */ }
-      recognitionRef.current = null;
-    }
-
+  // Creates a fresh SpeechRecognition instance and starts it.
+  // All restarts go through this so we never reuse a stale/error-state instance.
+  function _startInstance(lang: string): SpeechRecognition | null {
+    if (!isSupported()) return null;
     const Ctor = (window.SpeechRecognition ?? window.webkitSpeechRecognition)!;
     const rec  = new Ctor();
 
@@ -74,47 +72,76 @@ export function useSpeechRecognition({ onResult, onError }: Options) {
       }
     };
 
+    // onerror: report the error and gate auto-restart for fatal errors.
+    // Do NOT schedule a restart here — onend always fires after onerror,
+    // and onend is the single place where restart happens. Having two
+    // restart paths (onerror + onend) causes a race: onend fires at 300ms,
+    // then onerror fires at 1000ms on an already-running instance →
+    // InvalidStateError → Chrome leaves recognition in a broken state.
     rec.onerror = (event) => {
       const msg = ERROR_MESSAGES[event.error] ?? event.error;
       onErrorRef.current?.(msg);
-      if (isListeningRef.current && RECOVERABLE.has(event.error)) {
-        setTimeout(() => {
-          if (isListeningRef.current) {
-            try { rec.start(); } catch { /* already running */ }
-          }
-        }, 1_000);
+      if (NON_RECOVERABLE.has(event.error)) {
+        // Prevent onend from restarting for fatal errors
+        isListeningRef.current = false;
       }
     };
 
+    // onend is the single restart gate. Creates a NEW instance each time so
+    // we never carry over error state from the previous session.
     rec.onend = () => {
-      if (isListeningRef.current) {
+      // Guard: only restart if this instance is still the active one
+      if (isListeningRef.current && recognitionRef.current === rec) {
+        recognitionRef.current = null;
         setTimeout(() => {
           if (isListeningRef.current) {
-            try { rec.start(); } catch { /* ignore */ }
+            const newRec = _startInstance(currentLangRef.current);
+            if (newRec) recognitionRef.current = newRec;
           }
         }, 300);
       }
     };
 
-    recognitionRef.current = rec;
+    try {
+      rec.start();
+      return rec;
+    } catch {
+      return null;
+    }
+  }
+
+  const start = (lang = 'ar-SA'): boolean => {
+    if (!isSupported()) return false;
+    currentLangRef.current = lang;
+
+    // Nullify recognitionRef BEFORE stopping so the old onend handler
+    // sees recognitionRef.current !== rec and does not trigger a restart
+    if (recognitionRef.current) {
+      const old = recognitionRef.current;
+      recognitionRef.current = null;
+      try { old.stop(); } catch { /* ignore */ }
+    }
+
     isListeningRef.current = true;
     accumulatedRef.current = '';
 
-    try {
-      rec.start();
+    const rec = _startInstance(lang);
+    if (rec) {
+      recognitionRef.current = rec;
       return true;
-    } catch {
-      isListeningRef.current = false;
-      return false;
     }
+    isListeningRef.current = false;
+    return false;
   };
 
   const stop = (): string => {
     isListeningRef.current = false;
     const full = accumulatedRef.current;
     accumulatedRef.current = '';
-    try { recognitionRef.current?.stop(); } catch { /* ignore */ }
+    // Nullify first so onend guard blocks any pending restart
+    const rec = recognitionRef.current;
     recognitionRef.current = null;
+    try { rec?.stop(); } catch { /* ignore */ }
     return full;
   };
 

@@ -272,7 +272,7 @@ export default function LecturerDashboard() {
       deviceChangeRef.current = null;
     }
 
-    speechRec.stop();
+    const sttAccumulated = speechRec.stop();
 
     processorRef.current?.disconnect();
     processorRef.current = null;
@@ -284,10 +284,10 @@ export default function LecturerDashboard() {
     streamRef.current = null;
 
     // Auto-save to archive when recording was active
-    if (wasActive && sessionId && sessionCode) {
-      const lines = transcriptRef.current;
-      const fullTranscript = lines.map((t) => t.text).join(' ');
-      if (fullTranscript.trim()) {
+    if (wasActive && sessionId && sessionCode && recordingTime > 0) {
+      const stateText      = transcriptRef.current.map((t) => t.text).join(' ');
+      const fullTranscript = sttAccumulated.trim() || stateText.trim();
+      try {
         sessionArchive.save({
           id:               sessionId,
           code:             sessionCode,
@@ -303,6 +303,8 @@ export default function LecturerDashboard() {
         });
         setSaveToast(true);
         setTimeout(() => setSaveToast(false), 3_500);
+      } catch (err) {
+        console.error('[Archive] Failed to save session:', err);
       }
     }
 
