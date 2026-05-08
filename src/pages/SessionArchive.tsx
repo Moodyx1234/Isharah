@@ -48,6 +48,17 @@ export default function SessionArchive() {
     });
   }, [sessions, search, filter]);
 
+  const downloadAudio = (audio: NonNullable<ArchivedSession['audio']>, code: string, startedAt: string) => {
+    const ext = audio.mimeType.includes('webm') ? 'webm'
+      : audio.mimeType.includes('ogg') ? 'ogg'
+      : audio.mimeType.includes('mp4') ? 'm4a'
+      : 'wav';
+    const a = document.createElement('a');
+    a.href = audio.base64;
+    a.download = `تسجيل-${code}-${startedAt.split('T')[0]}.${ext}`;
+    a.click();
+  };
+
   const handleDelete = (id: string) => {
     sessionArchive.delete(id);
     setSessions(sessionArchive.getAll());
@@ -224,6 +235,31 @@ export default function SessionArchive() {
                   </div>
                 ))}
               </div>
+
+              {/* Audio player */}
+              {selected.audio && (
+                <div style={{ marginBottom: 20 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <span style={{ fontSize: 12, color: 'rgba(240,244,248,0.45)' }}>
+                      🎵 {ar("التسجيل الصوتي", "Audio Recording")}
+                      {' · '}{formatDuration(selected.audio.durationSec)}
+                      {' · '}{(selected.audio.sizeBytes / 1024).toFixed(0)} KB
+                    </span>
+                    <button
+                      className={s.actionBtn}
+                      onClick={() => downloadAudio(selected.audio!, selected.code, selected.startedAt)}
+                    >
+                      <Download size={12} aria-hidden />
+                      {ar("تحميل", "Download")}
+                    </button>
+                  </div>
+                  <audio
+                    controls
+                    src={selected.audio.base64}
+                    style={{ width: '100%', borderRadius: 8, display: 'block' }}
+                  />
+                </div>
+              )}
 
               {/* Tabs */}
               <div className={s.tabBar}>

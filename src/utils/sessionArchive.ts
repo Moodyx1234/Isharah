@@ -14,6 +14,12 @@ export interface ArchivedSession {
     full: string;
     wordCount: number;
   };
+  audio?: {
+    base64: string;
+    mimeType: string;
+    sizeBytes: number;
+    durationSec: number;
+  };
   stats: {
     totalStudents: number;
     deafStudents: number;
@@ -35,6 +41,9 @@ export interface SaveInput {
   studentCounts: { total: number; deaf: number; sighted: number };
   sttSource: string;
   averageConfidence: number;
+  audioBase64?: string;
+  audioMimeType?: string;
+  audioSizeBytes?: number;
 }
 
 export function formatDuration(seconds: number): string {
@@ -74,6 +83,14 @@ export const sessionArchive = {
           ? input.fullTranscript.trim().split(/\s+/).length
           : 0,
       },
+      ...(input.audioBase64 ? {
+        audio: {
+          base64:      input.audioBase64,
+          mimeType:    input.audioMimeType ?? 'audio/webm',
+          sizeBytes:   input.audioSizeBytes ?? 0,
+          durationSec: input.duration,
+        },
+      } : {}),
       stats: {
         totalStudents:   input.studentCounts.total,
         deafStudents:    input.studentCounts.deaf,
@@ -85,7 +102,18 @@ export const sessionArchive = {
 
     const all = this.getAll().filter((s) => s.id !== entry.id); // dedup
     all.unshift(entry);
-    localStorage.setItem(ARCHIVE_KEY, JSON.stringify(all.slice(0, MAX_ENTRIES)));
+    const slice = all.slice(0, MAX_ENTRIES);
+    try {
+      localStorage.setItem(ARCHIVE_KEY, JSON.stringify(slice));
+    } catch {
+      // Quota exceeded — strip audio blobs from all entries and retry
+      const stripped = slice.map((s) => ({ ...s, audio: undefined }));
+      try {
+        localStorage.setItem(ARCHIVE_KEY, JSON.stringify(stripped));
+      } catch {
+        localStorage.setItem(ARCHIVE_KEY, JSON.stringify(stripped.slice(0, 20)));
+      }
+    }
     return entry;
   },
 

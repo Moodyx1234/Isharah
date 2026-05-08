@@ -99,10 +99,10 @@ export default function LecturerDashboard() {
 
   // ── Refs ───────────────────────────────────────────────────────────────────
   const audioContextRef  = useRef<AudioContext | null>(null);
-  const processorRef     = useRef<ScriptProcessorNode | null>(null);
   const analyserRef      = useRef<AnalyserNode | null>(null);
   const streamRef        = useRef<MediaStream | null>(null);
-  const sequenceRef      = useRef(0);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef   = useRef<Blob[]>([]);
   const animFrameRef     = useRef<number | null>(null);
   const timerRef         = useRef<ReturnType<typeof setInterval> | null>(null);
   const deviceChangeRef  = useRef<(() => Promise<void>) | null>(null);
@@ -274,39 +274,75 @@ export default function LecturerDashboard() {
 
     const sttAccumulated = speechRec.stop();
 
-    processorRef.current?.disconnect();
-    processorRef.current = null;
-    analyserRef.current?.disconnect();
-    analyserRef.current = null;
-    audioContextRef.current?.close();
-    audioContextRef.current = null;
-    streamRef.current?.getTracks().forEach((t) => t.stop());
-    streamRef.current = null;
+    // Snapshot state before resets — stays valid inside async MediaRecorder.onstop closure
+    const snap = {
+      sessionId, sessionCode, recordingTime,
+      title:      sessionTitle.trim() || 'محاضرة جديدة',
+      lecturer:   lecturerName.trim() || 'المحاضر',
+      lang:       sttLang,
+      startedAt:  recStartTimeRef.current?.toISOString() ?? new Date().toISOString(),
+      students:   { total: studentCount.total, deaf: studentCount.deaf, sighted: studentCount.sighted },
+      sttSrc:     sttSource ?? 'web-speech',
+      confidence: avgConfidence,
+      transcript: transcriptRef.current,
+    };
 
-    // Auto-save to archive when recording was active
-    if (wasActive && sessionId && sessionCode && recordingTime > 0) {
-      const stateText      = transcriptRef.current.map((t) => t.text).join(' ');
+    const doSave = (audioBase64?: string, audioMimeType?: string, audioSizeBytes?: number) => {
+      if (!wasActive || !snap.sessionId || !snap.sessionCode || snap.recordingTime <= 0) return;
+      const stateText      = snap.transcript.map((t) => t.text).join(' ');
       const fullTranscript = sttAccumulated.trim() || stateText.trim();
       try {
         sessionArchive.save({
-          id:               sessionId,
-          code:             sessionCode,
-          title:            sessionTitle.trim() || 'محاضرة جديدة',
-          lecturerName:     lecturerName.trim() || 'المحاضر',
-          language:         sttLang,
-          startedAt:        recStartTimeRef.current?.toISOString() ?? new Date().toISOString(),
-          duration:         recordingTime,
+          id:                snap.sessionId,
+          code:              snap.sessionCode,
+          title:             snap.title,
+          lecturerName:      snap.lecturer,
+          language:          snap.lang,
+          startedAt:         snap.startedAt,
+          duration:          snap.recordingTime,
           fullTranscript,
-          studentCounts:    { total: studentCount.total, deaf: studentCount.deaf, sighted: studentCount.sighted },
-          sttSource:        sttSource ?? 'web-speech',
-          averageConfidence: avgConfidence,
+          studentCounts:     snap.students,
+          sttSource:         snap.sttSrc,
+          averageConfidence: snap.confidence,
+          audioBase64,
+          audioMimeType,
+          audioSizeBytes,
         });
         setSaveToast(true);
         setTimeout(() => setSaveToast(false), 3_500);
       } catch (err) {
         console.error('[Archive] Failed to save session:', err);
       }
+    };
+
+    // Stop MediaRecorder — archive write fires async in onstop
+    const mr = mediaRecorderRef.current;
+    mediaRecorderRef.current = null;
+    if (mr && mr.state !== 'inactive') {
+      mr.onstop = () => {
+        const mimeType = mr.mimeType || 'audio/webm';
+        const blob = new Blob(audioChunksRef.current, { type: mimeType });
+        audioChunksRef.current = [];
+        if (blob.size > 0) {
+          const reader = new FileReader();
+          reader.onloadend = () => doSave(reader.result as string, mimeType, blob.size);
+          reader.readAsDataURL(blob);
+        } else {
+          doSave();
+        }
+      };
+      mr.stop();
+    } else {
+      audioChunksRef.current = [];
+      doSave();
     }
+
+    analyserRef.current?.disconnect();
+    analyserRef.current = null;
+    audioContextRef.current?.close();
+    audioContextRef.current = null;
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+    streamRef.current = null;
 
     setMicStatus('idle');
     setAudioLevel(0);
@@ -332,20 +368,19 @@ export default function LecturerDashboard() {
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           channelCount: 1,
-          sampleRate: 16_000,
           echoCancellation: true,
           noiseSuppression: true,
           autoGainControl: true,
         },
       });
 
-      const ctx = new AudioContext({ sampleRate: 16_000 });
+      const ctx = new AudioContext();
       if (ctx.state === 'suspended') await ctx.resume();
 
       const src      = ctx.createMediaStreamSource(stream);
       const analyser = ctx.createAnalyser();
       analyser.fftSize = 256;
-      const processor = ctx.createScriptProcessor(4_096, 1, 1);
+      src.connect(analyser); // analyser only — NOT routed to destination (prevents echo)
 
       const freqData = new Uint8Array(analyser.frequencyBinCount);
       const tick = () => {
@@ -356,29 +391,16 @@ export default function LecturerDashboard() {
       };
       animFrameRef.current = requestAnimationFrame(tick);
 
-      processor.onaudioprocess = (e) => {
-        if (audioContextRef.current?.state === 'suspended') {
-          void audioContextRef.current.resume();
-          return;
-        }
-        const float32 = e.inputBuffer.getChannelData(0);
-        const int16   = new Int16Array(float32.length);
-        for (let i = 0; i < float32.length; i++) {
-          int16[i] = Math.max(-32_768, Math.min(32_767, Math.round(float32[i] * 32_767)));
-        }
-        const seq = sequenceRef.current++;
-        const buf = new ArrayBuffer(4 + int16.byteLength);
-        new DataView(buf).setUint32(0, seq, false);
-        new Uint8Array(buf).set(new Uint8Array(int16.buffer), 4);
-        wsClient.sendBinary(buf);
-      };
-
-      src.connect(analyser);
-      src.connect(processor);
-      processor.connect(ctx.destination);
+      // MediaRecorder captures audio for local playback and archive
+      audioChunksRef.current = [];
+      const mime = (['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus', 'audio/mp4'] as const)
+        .find((t) => MediaRecorder.isTypeSupported(t)) ?? '';
+      const mr = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
+      mr.ondataavailable = (e) => { if (e.data.size > 0) audioChunksRef.current.push(e.data); };
+      mr.start(1_000);
+      mediaRecorderRef.current = mr;
 
       audioContextRef.current = ctx;
-      processorRef.current    = processor;
       analyserRef.current     = analyser;
       streamRef.current       = stream;
 
