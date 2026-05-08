@@ -1,0 +1,80 @@
+/* ═══════════════════════════════════════════════════
+   Isharah Design Tokens — imported by index.css
+═══════════════════════════════════════════════════ */
+
+:root {
+  /* ── Background ── */
+  --bg-primary:   #090e18;
+  --bg-secondary: #0e1724;
+  --bg-surface:   rgba(255, 255, 255, 0.05);
+  --bg-overlay:   rgba(7, 17, 24, 0.90);
+
+  /* ── Accent colors ── */
+  --accent-teal:        #00C9A0;
+  --accent-teal-rgb:    0, 201, 160;
+  --accent-amber:       #F5A623;
+  --accent-amber-rgb:   245, 166, 35;
+  --accent-orange:      #e8985e;
+  --accent-orange-rgb:  232, 152, 94;
+
+  /* ── Text ── */
+  --text-primary: #f0f4f8;
+  --text-muted:   rgba(240, 244, 248, 0.45);
+  --text-faint:   rgba(240, 244, 248, 0.22);
+  --text-dim:     rgba(240, 244, 248, 0.32);
+
+  /* ── Borders ── */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-card:   rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.18);
+
+  /* ── Radius ── */
+  --radius-xs:   8px;
+  --radius-sm:   12px;
+  --radius-md:   18px;
+  --radius-lg:   28px;
+  --radius-pill: 50px;
+  --radius-full: 9999px;
+
+  /* ── Spacing ── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-14: 56px;
+
+  /* ── Typography ── */
+  --font-arabic: 'Tajawal', 'IBM Plex Arabic', sans-serif;
+  --font-latin:  'Inter', 'Helvetica Neue', sans-serif;
+
+  --text-xs:  0.73rem;
+  --text-sm:  0.82rem;
+  --text-md:  0.95rem;
+  --text-base: 1rem;
+  --text-lg:  1.05rem;
+  --text-xl:  1.25rem;
+  --text-2xl: 1.65rem;
+  --text-3xl: 2rem;
+  --text-4xl: 2.2rem;
+
+  /* ── Layout ── */
+  --nav-height:    58px;
+  --max-width:     1200px;
+  --panel-padding: clamp(16px, 5vw, 56px);
+
+  /* ── Shadows ── */
+  --shadow-sm:    0 1px 3px rgba(0, 0, 0, 0.25);
+  --shadow-md:    0 4px 18px rgba(0, 0, 0, 0.35);
+  --shadow-teal:  0 0 80px rgba(0, 201, 160, 0.10);
+  --shadow-amber: 0 0 60px rgba(245, 166, 35, 0.07);
+
+  /* ── Transitions ── */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.20s ease;
+  --transition-slow: 0.40s ease;
+}

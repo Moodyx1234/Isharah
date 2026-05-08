@@ -4,10 +4,11 @@ import { useTranslation } from "react-i18next";
 
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const WhoAreYou = lazy(() => import("./pages/WhoAreYou"));
-const LecturerPage = lazy(() => import("./pages/LecturerPage"));
+const LecturerDashboard = lazy(() => import("./pages/LecturerDashboard"));
 const DeafStudentPage = lazy(() => import("./pages/DeafStudentPage"));
 const BlindStudentPage = lazy(() => import("./pages/BlindStudentPage"));
 const SightedStudentPage = lazy(() => import("./pages/SightedStudentPage"));
+const SessionArchive = lazy(() => import("./pages/SessionArchive"));
 
 function LocaleLayout() {
   const { locale = "ar" } = useParams<{ locale: string }>();
@@ -36,11 +37,13 @@ export default function App() {
         <Route path="/" element={<Navigate to="/ar" replace />} />
         <Route path="/:locale" element={<LocaleLayout />}>
           <Route index element={<LandingPage />} />
+          <Route path="who" element={<WhoAreYou />} />
           <Route path="login" element={<WhoAreYou />} />
-          <Route path="lecturer" element={<LecturerPage />} />
+          <Route path="lecturer" element={<LecturerDashboard />} />
           <Route path="student/deaf" element={<DeafStudentPage />} />
           <Route path="student/blind" element={<BlindStudentPage />} />
           <Route path="student/sighted" element={<SightedStudentPage />} />
+          <Route path="archive" element={<SessionArchive />} />
         </Route>
       </Routes>
     </BrowserRouter>

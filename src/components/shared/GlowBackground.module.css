@@ -1,0 +1,61 @@
+/* ═══════════════════════════════════════════════════════
+   GlowBackground — shared ambient blob + grid texture
+   Used on every page as a drop-in background layer.
+═══════════════════════════════════════════════════════ */
+
+@keyframes gbDrift1 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  45%     { transform: translate(52px,-44px) scale(1.08); }
+  75%     { transform: translate(-28px,28px) scale(0.95); }
+}
+@keyframes gbDrift2 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  40%     { transform: translate(-45px,54px) scale(1.10); }
+  70%     { transform: translate(32px,-22px) scale(0.93); }
+}
+
+.blobBg {
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.gridTex {
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+/* Blob 1 — top-right */
+.blob1 {
+  top: -12%; right: -8%;
+  width: min(60vw, 650px);
+  height: min(60vw, 650px);
+  animation: gbDrift1 26s ease-in-out infinite;
+}
+/* Blob 2 — bottom-left */
+.blob2 {
+  bottom: -15%; left: -8%;
+  width: min(45vw, 400px);
+  height: min(45vw, 400px);
+  animation: gbDrift2 32s ease-in-out infinite;
+}
+
+/* ── Teal color variants ── */
+.blob1Teal { background: radial-gradient(ellipse, rgba(0,201,160,0.07) 0%, transparent 68%); }
+.blob2Teal { background: radial-gradient(ellipse, rgba(0,201,160,0.04) 0%, transparent 68%); }
+
+/* ── Amber color variants ── */
+.blob1Amber { background: radial-gradient(ellipse, rgba(245,166,35,0.07) 0%, transparent 68%); }
+.blob2Amber { background: radial-gradient(ellipse, rgba(245,166,35,0.04) 0%, transparent 68%); }
