@@ -26,6 +26,7 @@ export default function SessionArchive() {
   const [filter,    setFilter]    = useState<FilterId>('all');
   const [selected,  setSelected]  = useState<ArchivedSession | null>(null);
   const [activeTab, setActiveTab] = useState<Tab>('transcript');
+  const [toast,     setToast]     = useState<{ msg: string; ok: boolean } | null>(null);
 
   useEffect(() => {
     setSessions(sessionArchive.getAll());
@@ -48,6 +49,11 @@ export default function SessionArchive() {
     });
   }, [sessions, search, filter]);
 
+  const showToast = (msg: string, ok = true) => {
+    setToast({ msg, ok });
+    setTimeout(() => setToast(null), 3_000);
+  };
+
   const downloadAudio = (audio: NonNullable<ArchivedSession['audio']>, code: string, startedAt: string) => {
     const ext = audio.mimeType.includes('webm') ? 'webm'
       : audio.mimeType.includes('ogg') ? 'ogg'
@@ -56,7 +62,39 @@ export default function SessionArchive() {
     const a = document.createElement('a');
     a.href = audio.base64;
     a.download = `تسجيل-${code}-${startedAt.split('T')[0]}.${ext}`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
+  };
+
+  const handleExportTxt = () => {
+    if (!selected) return;
+    try {
+      sessionArchive.exportTxt(selected.id);
+      showToast(ar('✓ تم تصدير النص', '✓ Text exported'));
+    } catch {
+      showToast(ar('✗ فشل تصدير النص', '✗ Export failed'), false);
+    }
+  };
+
+  const handleExportJson = () => {
+    if (!selected) return;
+    try {
+      sessionArchive.exportJson(selected.id);
+      showToast(ar('✓ تم تصدير JSON', '✓ JSON exported'));
+    } catch {
+      showToast(ar('✗ فشل تصدير JSON', '✗ Export failed'), false);
+    }
+  };
+
+  const handleDownloadAudio = () => {
+    if (!selected?.audio) return;
+    try {
+      downloadAudio(selected.audio, selected.code, selected.startedAt);
+      showToast(ar('✓ جارٍ تحميل الصوت', '✓ Downloading audio'));
+    } catch {
+      showToast(ar('✗ فشل تحميل الصوت', '✗ Download failed'), false);
+    }
   };
 
   const handleDelete = (id: string) => {
@@ -196,14 +234,23 @@ export default function SessionArchive() {
                 <div className={s.detailActions}>
                   <button
                     className={s.actionBtn}
-                    onClick={() => sessionArchive.exportTxt(selected.id)}
+                    onClick={handleExportTxt}
                   >
                     <FileText size={13} aria-hidden />
                     {ar("تصدير نص", "Export .txt")}
                   </button>
+                  {selected.audio && (
+                    <button
+                      className={s.actionBtn}
+                      onClick={handleDownloadAudio}
+                    >
+                      <Download size={13} aria-hidden />
+                      {ar("تحميل الصوت", "Download Audio")}
+                    </button>
+                  )}
                   <button
                     className={s.actionBtn}
-                    onClick={() => sessionArchive.exportJson(selected.id)}
+                    onClick={handleExportJson}
                   >
                     <Download size={13} aria-hidden />
                     {ar("تصدير JSON", "Export JSON")}
@@ -247,7 +294,7 @@ export default function SessionArchive() {
                     </span>
                     <button
                       className={s.actionBtn}
-                      onClick={() => downloadAudio(selected.audio!, selected.code, selected.startedAt)}
+                      onClick={handleDownloadAudio}
                     >
                       <Download size={12} aria-hidden />
                       {ar("تحميل", "Download")}
@@ -298,6 +345,24 @@ export default function SessionArchive() {
           )}
         </div>
       </main>
+
+      {/* Export toast */}
+      {toast && (
+        <div
+          role="status"
+          aria-live="polite"
+          style={{
+            position: 'fixed', bottom: 28, left: '50%', transform: 'translateX(-50%)',
+            background: toast.ok ? 'rgba(0,201,160,0.15)' : 'rgba(239,68,68,0.15)',
+            border: `1px solid ${toast.ok ? 'rgba(0,201,160,0.3)' : 'rgba(239,68,68,0.3)'}`,
+            borderRadius: 12, padding: '12px 20px', fontSize: 14, fontWeight: 600,
+            color: toast.ok ? '#00c9a7' : '#f87171',
+            backdropFilter: 'blur(12px)', zIndex: 999, whiteSpace: 'nowrap',
+          }}
+        >
+          {toast.msg}
+        </div>
+      )}
     </div>
   );
 }

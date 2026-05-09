@@ -29,6 +29,7 @@ export function useSpeechRecognition({ onResult, onError }: Options) {
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const isListeningRef = useRef(false);
   const accumulatedRef = useRef('');
+  const lastInterimRef = useRef('');   // fallback if recognition ends before final results
   const currentLangRef = useRef('ar-SA');
   const onResultRef    = useRef(onResult);
   const onErrorRef     = useRef(onError);
@@ -60,6 +61,7 @@ export function useSpeechRecognition({ onResult, onError }: Options) {
           const trimmed = text.trim();
           if (trimmed) {
             accumulatedRef.current += (accumulatedRef.current ? ' ' : '') + trimmed;
+            lastInterimRef.current = ''; // clear once we have a confirmed final
             const alternatives: Array<{ text: string; confidence: number }> = [];
             for (let j = 0; j < result.length; j++) {
               alternatives.push({ text: result[j].transcript, confidence: result[j].confidence });
@@ -67,6 +69,7 @@ export function useSpeechRecognition({ onResult, onError }: Options) {
             onResultRef.current({ text: trimmed, isFinal: true, confidence: conf, alternatives });
           }
         } else {
+          lastInterimRef.current = text; // keep last interim as fallback
           onResultRef.current({ text, isFinal: false, confidence: 0 });
         }
       }
@@ -136,13 +139,16 @@ export function useSpeechRecognition({ onResult, onError }: Options) {
 
   const stop = (): string => {
     isListeningRef.current = false;
-    const full = accumulatedRef.current;
+    const full    = accumulatedRef.current;
+    const interim = lastInterimRef.current;
     accumulatedRef.current = '';
+    lastInterimRef.current = '';
     // Nullify first so onend guard blocks any pending restart
     const rec = recognitionRef.current;
     recognitionRef.current = null;
     try { rec?.stop(); } catch { /* ignore */ }
-    return full;
+    // Return confirmed finals; fall back to last interim if recognition ended mid-utterance
+    return full.trim() || interim.trim();
   };
 
   const changeLanguage = (lang: string): void => {

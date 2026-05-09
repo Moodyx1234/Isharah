@@ -129,28 +129,55 @@ export const sessionArchive = {
   exportTxt(id: string): void {
     const s = this.getById(id);
     if (!s) return;
-    const date = new Date(s.startedAt).toLocaleDateString('ar-SA');
+    const sep  = '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+    const date = new Date(s.startedAt).toLocaleDateString('ar-SA', {
+      year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit',
+    });
     const lines = [
-      `جلسة: ${s.title}`,
+      sep,
+      'منصة إشارة — تفريغ المحاضرة',
+      sep,
+      '',
+      `العنوان: ${s.title}`,
       `الكود: ${s.code}`,
       `المحاضر: ${s.lecturerName}`,
       `التاريخ: ${date}`,
       `المدة: ${formatDuration(s.duration)}`,
+      `اللغة: ${s.language.startsWith('ar') ? 'العربية' : 'الإنجليزية'}`,
       `عدد الطلاب: ${s.stats.totalStudents}`,
       `عدد الكلمات: ${s.transcript.wordCount}`,
-      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-      ``,
-      s.transcript.full,
+      '',
+      sep,
+      'النص الكامل:',
+      sep,
+      '',
+      s.transcript.full || '(لا يوجد نص مسجل لهذه الجلسة)',
+      '',
+      sep,
+      `تم التصدير من منصة إشارة — ${new Date().toLocaleDateString('ar-SA')}`,
+      sep,
     ];
-    const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
-    triggerDownload(blob, `جلسة-${s.code}-${s.startedAt.split('T')[0]}.txt`);
+    // UTF-8 BOM ensures Arabic renders correctly in Windows Notepad
+    const blob = new Blob(['﻿' + lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+    triggerDownload(blob, `محاضرة-${s.code}-${s.startedAt.split('T')[0]}.txt`);
   },
 
   exportJson(id: string): void {
     const s = this.getById(id);
     if (!s) return;
-    const blob = new Blob([JSON.stringify(s, null, 2)], { type: 'application/json' });
-    triggerDownload(blob, `session-${s.code}.json`);
+    // Strip audio base64 — it's ~150 KB and downloadable separately
+    const exportData = {
+      ...s,
+      audio: s.audio ? {
+        mimeType:    s.audio.mimeType,
+        sizeBytes:   s.audio.sizeBytes,
+        durationSec: s.audio.durationSec,
+        note:        'audio file omitted — use the Download Audio button',
+      } : undefined,
+      exportedAt: new Date().toISOString(),
+    };
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json;charset=utf-8' });
+    triggerDownload(blob, `session-${s.code}-${s.startedAt.split('T')[0]}.json`);
   },
 };
 
