@@ -9,6 +9,8 @@ const DeafStudentPage = lazy(() => import("./pages/DeafStudentPage"));
 const BlindStudentPage = lazy(() => import("./pages/BlindStudentPage"));
 const SightedStudentPage = lazy(() => import("./pages/SightedStudentPage"));
 const SessionArchive = lazy(() => import("./pages/SessionArchive"));
+const LecturerSharePage = lazy(() => import("./pages/LecturerSharePage"));
+const StudentSharePage = lazy(() => import("./pages/StudentSharePage"));
 
 function LocaleLayout() {
   const { locale = "ar" } = useParams<{ locale: string }>();
@@ -40,9 +42,11 @@ export default function App() {
           <Route path="who" element={<WhoAreYou />} />
           <Route path="login" element={<WhoAreYou />} />
           <Route path="lecturer" element={<LecturerDashboard />} />
+          <Route path="lecturer/share" element={<LecturerSharePage />} />
           <Route path="student/deaf" element={<DeafStudentPage />} />
           <Route path="student/blind" element={<BlindStudentPage />} />
           <Route path="student/sighted" element={<SightedStudentPage />} />
+          <Route path="student/:studentRole/share" element={<StudentSharePage />} />
           <Route path="archive" element={<SessionArchive />} />
         </Route>
       </Routes>

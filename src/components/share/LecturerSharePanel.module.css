@@ -1,0 +1,488 @@
+/* ═══════════════════════════════════════════════════
+   إشارة — LecturerSharePanel
+   Dark navy #071118 · teal #00C9A0 · glassmorphism
+═══════════════════════════════════════════════════ */
+
+/* ── Page shell ── */
+.page {
+  min-height: 100vh;
+  background: #071118;
+  color: #f0f4f8;
+  font-family: 'Tajawal', 'IBM Plex Arabic', sans-serif;
+  direction: rtl;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ── Ambient blobs ── */
+.blobBg {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes b1 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  40%     { transform: translate(60px,-50px) scale(1.08); }
+  70%     { transform: translate(-30px,30px) scale(0.96); }
+}
+@keyframes b2 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  35%     { transform: translate(-60px,70px) scale(1.12); }
+  70%     { transform: translate(40px,-25px) scale(0.92); }
+}
+.blob { position: absolute; border-radius: 50%; will-change: transform; }
+.blob1 {
+  top: -10%; right: -6%;
+  width: min(62vw, 700px); height: min(62vw, 700px);
+  background: radial-gradient(ellipse, rgba(0,201,160,0.09) 0%, transparent 68%);
+  animation: b1 26s ease-in-out infinite;
+}
+.blob2 {
+  bottom: -18%; left: -10%;
+  width: min(50vw, 560px); height: min(50vw, 560px);
+  background: radial-gradient(ellipse, rgba(0,201,160,0.05) 0%, transparent 68%);
+  animation: b2 32s ease-in-out infinite;
+}
+
+/* ── 3-column layout ── */
+.grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 280px 1fr 280px;
+  gap: 20px;
+  padding: 20px;
+  min-height: 100vh;
+  align-items: start;
+}
+
+/* ── Glass card ── */
+.card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 18px;
+  padding: 18px;
+  backdrop-filter: blur(12px);
+  margin-bottom: 16px;
+}
+.cardGrow { flex: 1; }
+
+.cardLabel {
+  font-size: 0.73rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(240,244,248,0.35);
+  margin: 0 0 12px;
+}
+
+/* ── Session code ── */
+.codeRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.code {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #00C9A0;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  font-family: 'Tajawal', monospace;
+}
+.copyBtn {
+  background: rgba(0,201,160,0.1);
+  border: 1px solid rgba(0,201,160,0.25);
+  color: #00C9A0;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+.copyBtn:hover {
+  background: rgba(0,201,160,0.2);
+  box-shadow: 0 0 10px rgba(0,201,160,0.25);
+}
+.copiedBadge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  color: #00C9A0;
+}
+
+.studentCount {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(240,244,248,0.6);
+  font-size: 0.88rem;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+}
+.dotGreen { background: #4ade80; box-shadow: 0 0 6px rgba(74,222,128,0.5); }
+
+.connStatus {
+  margin: 8px 0 0;
+  font-size: 0.78rem;
+  color: rgba(245,166,35,0.8);
+}
+
+/* ── Share mode buttons ── */
+.modeBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 12px;
+  color: #f0f4f8;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-align: right;
+  transition: all 0.15s ease;
+  margin-bottom: 8px;
+  position: relative;
+}
+.modeBtn:hover {
+  background: rgba(0,201,160,0.08);
+  border-color: rgba(0,201,160,0.3);
+}
+.modeBtnActive {
+  background: rgba(0,201,160,0.12) !important;
+  border-color: rgba(0,201,160,0.45) !important;
+  box-shadow: 0 0 14px rgba(0,201,160,0.18);
+  color: #00C9A0;
+}
+.modeBtnStop {
+  background: rgba(239,68,68,0.07) !important;
+  border-color: rgba(239,68,68,0.25) !important;
+  color: #fca5a5 !important;
+}
+.modeBtnStop:hover {
+  background: rgba(239,68,68,0.14) !important;
+  border-color: rgba(239,68,68,0.45) !important;
+}
+.modeBtnIcon { font-size: 1.1rem; flex-shrink: 0; }
+
+.liveDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f87171;
+  animation: pulse 1.4s ease-in-out infinite;
+  margin-right: auto;
+  flex-shrink: 0;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%     { opacity: 0.5; transform: scale(0.8); }
+}
+
+.errorText {
+  color: #fca5a5;
+  font-size: 0.8rem;
+  margin: 8px 0 0;
+  line-height: 1.4;
+}
+
+/* ── Student list ── */
+.studentList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.studentRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.roleIcon { font-size: 1.1rem; flex-shrink: 0; }
+.studentName {
+  flex: 1;
+  font-size: 0.85rem;
+  color: rgba(240,244,248,0.8);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.handBadge {
+  background: rgba(245,166,35,0.15);
+  border: 1px solid rgba(245,166,35,0.35);
+  color: #F5A623;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.handBadge:hover { background: rgba(245,166,35,0.28); }
+
+/* ── CENTER MAIN ── */
+.main {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 40px);
+  min-height: 0;
+}
+
+/* Empty state */
+.emptyState {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 24px;
+  padding: 48px;
+  text-align: center;
+}
+.emptyIcon { font-size: 3.5rem; line-height: 1; }
+.emptyTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #f0f4f8;
+  margin: 0;
+}
+.emptySubtitle {
+  color: rgba(240,244,248,0.45);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.quickActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 8px;
+}
+.quickBtn {
+  padding: 10px 24px;
+  background: rgba(0,201,160,0.1);
+  border: 1px solid rgba(0,201,160,0.3);
+  border-radius: 12px;
+  color: #00C9A0;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.quickBtn:hover {
+  background: rgba(0,201,160,0.18);
+  box-shadow: 0 0 14px rgba(0,201,160,0.25);
+}
+
+/* Upload in center */
+.centerUpload {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 32px;
+}
+.uploadTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #f0f4f8;
+  margin: 0;
+}
+.centerUploadZone { width: 100%; max-width: 520px; }
+
+/* Screen share */
+.screenWrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: 12px;
+  position: relative;
+}
+.liveBadge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,0,0,0.75);
+  border-radius: 50px;
+  padding: 7px 16px;
+  font-size: 0.82rem;
+  color: #f0f4f8;
+  font-family: 'Tajawal', sans-serif;
+  border: 1px solid rgba(248,113,113,0.3);
+  backdrop-filter: blur(8px);
+}
+.redDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f87171;
+  animation: pulse 1.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.screenVideo {
+  flex: 1;
+  width: 100%;
+  object-fit: contain;
+  background: #000;
+  border-radius: 16px;
+  border: 1px solid rgba(0,201,160,0.2);
+  min-height: 0;
+  display: block;
+}
+.stopBar {
+  width: 100%;
+  padding: 12px;
+  background: rgba(239,68,68,0.12);
+  border: 1px solid rgba(239,68,68,0.3);
+  border-radius: 12px;
+  color: #fca5a5;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.stopBar:hover {
+  background: rgba(239,68,68,0.22);
+  border-color: rgba(239,68,68,0.5);
+}
+
+/* File view */
+.fileWrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── RIGHT SIDEBAR ── */
+.rightBar { display: flex; flex-direction: column; }
+
+.previewBox {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+.previewVideo, .previewImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.previewEmpty {
+  color: rgba(240,244,248,0.3);
+  font-size: 0.82rem;
+  font-family: 'Tajawal', sans-serif;
+}
+.previewLabel {
+  color: rgba(240,244,248,0.35);
+  font-size: 0.75rem;
+  margin: 0;
+  text-align: center;
+  font-family: 'Tajawal', sans-serif;
+}
+
+/* Stats */
+.statRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.statRow:last-child { border-bottom: none; }
+.statLabel { color: rgba(240,244,248,0.45); font-size: 0.82rem; }
+.statValue { color: #f0f4f8; font-size: 0.88rem; font-weight: 600; }
+.statLive  { color: #4ade80; }
+
+/* Raised hands */
+.handList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.handItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  background: rgba(245,166,35,0.06);
+  border: 1px solid rgba(245,166,35,0.2);
+  border-radius: 10px;
+}
+.handName { font-size: 0.85rem; color: #F5A623; flex: 1; }
+.ackBtn {
+  background: rgba(0,201,160,0.12);
+  border: 1px solid rgba(0,201,160,0.3);
+  color: #00C9A0;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.ackBtn:hover { background: rgba(0,201,160,0.22); }
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .grid { grid-template-columns: 240px 1fr 220px; }
+}
+@media (max-width: 860px) {
+  .grid { grid-template-columns: 1fr; grid-template-rows: auto 1fr auto; }
+  .sidebar, .rightBar { display: contents; }
+  .main { height: 60vh; min-height: 400px; }
+}

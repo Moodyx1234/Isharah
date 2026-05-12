@@ -1,0 +1,236 @@
+/* ═══════════════════════════════════════════════
+   إشارة — FileUploadZone
+═══════════════════════════════════════════════ */
+
+/* ── Idle / drag drop zone ── */
+.zone {
+  border: 2px dashed rgba(0,201,160,0.30);
+  border-radius: 16px;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 28px 20px;
+  background: rgba(0,201,160,0.02);
+  text-align: center;
+}
+.zone:hover {
+  border-color: rgba(0,201,160,0.55);
+  background: rgba(0,201,160,0.05);
+}
+.drag {
+  border-color: #00C9A0 !important;
+  background: rgba(0,201,160,0.08) !important;
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(0,201,160,0.15);
+}
+
+.uploadIcon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.hiddenInput { display: none; }
+
+.zonePrimary {
+  color: #f0f4f8;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.zoneSecondary {
+  color: rgba(240,244,248,0.45);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+/* ── Uploading ── */
+.uploadingBox {
+  border-radius: 16px;
+  padding: 20px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.uploadingHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  direction: rtl;
+}
+
+.filenameLabel {
+  color: #f0f4f8;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 180px;
+}
+
+.pctLabel {
+  color: #00C9A0;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.progressTrack {
+  height: 6px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #00C9A0, #00e5b7);
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px rgba(0,201,160,0.4);
+}
+
+.uploadingMsg {
+  color: rgba(240,244,248,0.5);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.8rem;
+  margin: 0;
+  text-align: center;
+}
+
+/* ── Success ── */
+.successBox {
+  border-radius: 16px;
+  padding: 24px 20px;
+  background: rgba(0,201,160,0.06);
+  border: 1px solid rgba(0,201,160,0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.successIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0,201,160,0.18);
+  border: 1.5px solid rgba(0,201,160,0.45);
+  color: #00C9A0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.successFilename {
+  color: #f0f4f8;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0;
+  max-width: 100%;
+  word-break: break-all;
+}
+
+.successMeta {
+  color: rgba(240,244,248,0.5);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.shareNowBtn {
+  width: 100%;
+  padding: 10px 20px;
+  background: #00C9A0;
+  color: #071118;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-top: 4px;
+}
+.shareNowBtn:hover {
+  background: #00e5b7;
+  box-shadow: 0 0 16px rgba(0,201,160,0.4);
+}
+
+.resetBtn {
+  background: transparent;
+  border: none;
+  color: rgba(240,244,248,0.4);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+.resetBtn:hover { color: rgba(240,244,248,0.7); }
+
+/* ── Error ── */
+.errorBox {
+  border-radius: 16px;
+  padding: 24px 20px;
+  background: rgba(239,68,68,0.06);
+  border: 1px solid rgba(239,68,68,0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.errorIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(239,68,68,0.12);
+  border: 1.5px solid rgba(239,68,68,0.35);
+  color: #f87171;
+  font-size: 1.2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.errorMsg {
+  color: #fca5a5;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.retryBtn {
+  padding: 9px 24px;
+  background: rgba(239,68,68,0.12);
+  border: 1px solid rgba(239,68,68,0.3);
+  color: #fca5a5;
+  border-radius: 10px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.retryBtn:hover {
+  background: rgba(239,68,68,0.2);
+  border-color: rgba(239,68,68,0.5);
+}

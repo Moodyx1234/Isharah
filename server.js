@@ -3,10 +3,61 @@ const express = require("express");
 const { createServer } = require("http");
 const WebSocket = require("ws");
 const path = require("path");
+const fs = require("fs");
+const { Server: SocketIOServer } = require("socket.io");
+const multer = require("multer");
 
 const port = parseInt(process.env.PORT || "3000", 10);
 const app = express();
 app.use(express.json({ limit: "10mb" }));
+
+// ─── File upload setup ───────────────────────────────────────────────────────
+const UPLOADS_DIR = path.join(__dirname, "uploads");
+if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+
+const storage = multer.diskStorage({
+  destination: (req, _file, cb) => {
+    const dir = path.join(UPLOADS_DIR, req.params.sessionId || "default");
+    fs.mkdirSync(dir, { recursive: true });
+    cb(null, dir);
+  },
+  filename: (_req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${ext}`);
+  },
+});
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 50 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    const allowed = [".pdf", ".png", ".jpg", ".jpeg"];
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (allowed.includes(ext)) cb(null, true);
+    else cb(new Error("نوع الملف غير مدعوم — PDF, PNG, JPG فقط"));
+  },
+});
+
+app.use("/uploads", express.static(UPLOADS_DIR));
+
+app.post("/api/upload/:sessionId", (req, res) => {
+  upload.single("file")(req, res, (err) => {
+    if (err) return res.status(400).json({ error: err.message || "فشل الرفع" });
+    if (!req.file) return res.status(400).json({ error: "لم يتم اختيار ملف" });
+
+    const ext = path.extname(req.file.originalname).toLowerCase();
+    const fileUrl = `/uploads/${req.params.sessionId}/${req.file.filename}`;
+    const fileId  = `file_${Date.now()}`;
+
+    if (ext === ".pdf") {
+      return res.json({ fileId, type: "pdf", url: fileUrl, filename: req.file.originalname });
+    }
+    return res.json({
+      fileId, type: "image", url: fileUrl, filename: req.file.originalname,
+      totalSlides: 1, slides: [fileUrl],
+    });
+  });
+});
 
 // ─── In-memory stores ────────────────────────────────────────────────────────
 const sessions    = new Map(); // sessionId → SessionRoom
@@ -263,9 +314,190 @@ function handleAudioChunk(ws, data) {
   audioByteCounts.set(ws.sessionId, prev + data.length);
 }
 
+// ─── Socket.io: Screen & File Sharing ────────────────────────────────────────
+const io = new SocketIOServer(httpServer, {
+  path: "/socket.io",
+  cors: {
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+
+// In-memory share sessions (linked to existing sessions by code)
+const shareSessions = new Map();
+
+const shareNs = io.of("/share");
+
+shareNs.on("connection", (socket) => {
+  // ── join-session ────────────────────────────────────────────────────────────
+  socket.on("join-session", ({ sessionCode, role, userId, userName }) => {
+    const upperCode = String(sessionCode || "").toUpperCase();
+    const sessionId = codeToId.get(upperCode);
+    if (!sessionId) {
+      socket.emit("error", { code: "SESSION_NOT_FOUND", message: "الجلسة غير موجودة" });
+      return;
+    }
+
+    if (!shareSessions.has(sessionId)) {
+      shareSessions.set(sessionId, {
+        sessionId, sessionCode: upperCode,
+        lecturer: null,
+        students: new Map(),
+        shareMode: "none",
+        currentFile: null,
+        currentSlide: 0,
+        isLive: false,
+      });
+    }
+
+    const ss = shareSessions.get(sessionId);
+    socket.data.sessionId = sessionId;
+    socket.data.role      = role;
+    socket.data.userId    = userId;
+    socket.data.userName  = userName;
+    socket.join(sessionId);
+
+    if (role === "lecturer") {
+      ss.lecturer = socket.id;
+      ss.isLive   = true;
+    } else {
+      ss.students.set(socket.id, { socketId: socket.id, role, userId, userName, handRaised: false });
+    }
+
+    // Current state snapshot
+    socket.emit("session-state", {
+      sessionId,
+      shareMode:      ss.shareMode,
+      currentFile:    ss.currentFile,
+      currentSlide:   ss.currentSlide,
+      isLive:         ss.isLive,
+      connectedUsers: [...ss.students.values()],
+    });
+
+    // Notify room
+    if (role !== "lecturer") {
+      socket.to(sessionId).emit("user-joined", { socketId: socket.id, role, userId, userName });
+      // If screen share already active, tell lecturer to send offer to new student
+      if (ss.shareMode === "screen" && ss.lecturer) {
+        shareNs.to(ss.lecturer).emit("create-offers-for", { studentIds: [socket.id] });
+      }
+    }
+  });
+
+  // ── Screen sharing ──────────────────────────────────────────────────────────
+  socket.on("start-screen-share", () => {
+    const ss = shareSessions.get(socket.data.sessionId);
+    if (!ss || ss.lecturer !== socket.id) return;
+    ss.shareMode    = "screen";
+    ss.currentFile  = null;
+    ss.currentSlide = 0;
+    socket.to(socket.data.sessionId).emit("share-mode-changed", { shareMode: "screen" });
+    const studentIds = [...ss.students.keys()];
+    if (studentIds.length) socket.emit("create-offers-for", { studentIds });
+  });
+
+  socket.on("stop-screen-share", () => {
+    const ss = shareSessions.get(socket.data.sessionId);
+    if (!ss || ss.lecturer !== socket.id) return;
+    ss.shareMode = "none";
+    socket.to(socket.data.sessionId).emit("share-stopped");
+  });
+
+  // ── WebRTC signaling ────────────────────────────────────────────────────────
+  socket.on("webrtc-offer", ({ targetId, offer }) => {
+    shareNs.to(targetId).emit("webrtc-offer", { fromId: socket.id, offer });
+  });
+
+  socket.on("webrtc-answer", ({ targetId, answer }) => {
+    shareNs.to(targetId).emit("webrtc-answer", { fromId: socket.id, answer });
+  });
+
+  socket.on("webrtc-ice-candidate", ({ targetId, candidate }) => {
+    shareNs.to(targetId).emit("webrtc-ice-candidate", { fromId: socket.id, candidate });
+  });
+
+  // ── File sharing ────────────────────────────────────────────────────────────
+  socket.on("share-file", (payload) => {
+    const ss = shareSessions.get(socket.data.sessionId);
+    if (!ss || ss.lecturer !== socket.id) return;
+    ss.shareMode    = "file";
+    ss.currentFile  = payload;
+    ss.currentSlide = 0;
+    socket.to(socket.data.sessionId).emit("file-shared", payload);
+  });
+
+  socket.on("change-slide", ({ slideIndex }) => {
+    const ss = shareSessions.get(socket.data.sessionId);
+    if (!ss || ss.lecturer !== socket.id) return;
+    ss.currentSlide = slideIndex;
+    socket.to(socket.data.sessionId).emit("slide-changed", { slideIndex });
+  });
+
+  socket.on("stop-sharing", () => {
+    const ss = shareSessions.get(socket.data.sessionId);
+    if (!ss || ss.lecturer !== socket.id) return;
+    ss.shareMode    = "none";
+    ss.currentFile  = null;
+    ss.currentSlide = 0;
+    socket.to(socket.data.sessionId).emit("share-stopped");
+  });
+
+  // ── Hand raise ──────────────────────────────────────────────────────────────
+  socket.on("raise-hand", ({ userName: uName }) => {
+    const ss = shareSessions.get(socket.data.sessionId);
+    if (!ss) return;
+    const student = ss.students.get(socket.id);
+    if (student) student.handRaised = true;
+    if (ss.lecturer) {
+      shareNs.to(ss.lecturer).emit("hand-raised", {
+        socketId: socket.id,
+        userId:   socket.data.userId,
+        userName: uName || socket.data.userName,
+      });
+    }
+  });
+
+  socket.on("lower-hand", () => {
+    const ss = shareSessions.get(socket.data.sessionId);
+    if (!ss) return;
+    const student = ss.students.get(socket.id);
+    if (student) student.handRaised = false;
+    if (ss.lecturer) shareNs.to(ss.lecturer).emit("hand-lowered", { socketId: socket.id });
+  });
+
+  socket.on("acknowledge-hand", ({ studentId }) => {
+    const ss = shareSessions.get(socket.data.sessionId);
+    if (!ss || ss.lecturer !== socket.id) return;
+    const student = ss.students.get(studentId);
+    if (student) student.handRaised = false;
+    shareNs.to(studentId).emit("hand-acknowledged");
+    // Broadcast updated list to lecturer
+    socket.emit("hand-lowered", { socketId: studentId });
+  });
+
+  // ── Disconnect ──────────────────────────────────────────────────────────────
+  socket.on("disconnect", () => {
+    const ss = shareSessions.get(socket.data.sessionId);
+    if (!ss) return;
+    if (ss.lecturer === socket.id) {
+      ss.isLive    = false;
+      ss.shareMode = "none";
+      shareNs.to(socket.data.sessionId).emit("session-ended", { reason: "lecturer-left" });
+    } else {
+      ss.students.delete(socket.id);
+      shareNs.to(socket.data.sessionId).emit("user-left", {
+        socketId: socket.id,
+        userId:   socket.data.userId,
+      });
+    }
+  });
+});
+
 // ─── Start ────────────────────────────────────────────────────────────────────
 httpServer.listen(port, () => {
   console.log(`✓  Isharah dev server ready → http://localhost:${port}`);
   console.log(`   WebSocket at ws://localhost:${port}/ws`);
+  console.log(`   Socket.io share namespace at /share`);
   console.log(`   Open /lecturer — no login needed`);
 });

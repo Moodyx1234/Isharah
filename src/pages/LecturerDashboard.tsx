@@ -688,6 +688,29 @@ export default function LecturerDashboard() {
               {studentCount.deaf > 0    && ` (${studentCount.deaf} ${ar("أصم", "deaf")})`}
               {studentCount.sighted > 0 && ` (${studentCount.sighted} ${ar("مبصر", "sighted")})`}
             </div>
+            {sessionCode && (
+              <Link
+                to={`/${locale}/lecturer/share?code=${sessionCode}`}
+                style={{
+                  marginRight: 'auto',
+                  padding: '7px 18px',
+                  background: 'rgba(0,201,160,0.12)',
+                  border: '1px solid rgba(0,201,160,0.35)',
+                  borderRadius: 10,
+                  color: '#00C9A0',
+                  fontFamily: 'Tajawal, sans-serif',
+                  fontSize: '0.88rem',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  transition: 'all 0.15s',
+                }}
+              >
+                🖥 {ar('مشاركة المحتوى', 'Share Content')}
+              </Link>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
