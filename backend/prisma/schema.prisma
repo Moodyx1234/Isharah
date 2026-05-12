@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum SessionStatus {
+  WAITING
+  LIVE
+  ENDED
+}
+
+enum StudentType {
+  DEAF
+  SIGHTED
+}
+
+// ─── Models ──────────────────────────────────────────────────────────────────
+
+model Session {
+  id           String        @id @default(cuid())
+  code         String        @unique @db.VarChar(6)
+  title        String
+  subject      String?
+  lecturerName String?
+  status       SessionStatus @default(WAITING)
+  startedAt    DateTime?
+  endedAt      DateTime?
+  createdAt    DateTime      @default(now())
+
+  enrollments Enrollment[]
+  transcript  TranscriptEntry[]
+  summaries   Summary[]
+  keyPoints   KeyPoint[]
+}
+
+model Enrollment {
+  id          String      @id @default(cuid())
+  sessionId   String
+  session     Session     @relation(fields: [sessionId], references: [id])
+  guestName   String?
+  studentType StudentType
+  joinedAt    DateTime    @default(now())
+  leftAt      DateTime?
+  handRaised  Boolean     @default(false)
+}
+
+model TranscriptEntry {
+  id          String   @id @default(cuid())
+  sessionId   String
+  session     Session  @relation(fields: [sessionId], references: [id])
+  text        String
+  timestamp   DateTime @default(now())
+  sequenceNum Int
+  confidence  Float?
+  language    String   @default("ar")
+}
+
+model Summary {
+  id          String   @id @default(cuid())
+  sessionId   String
+  session     Session  @relation(fields: [sessionId], references: [id])
+  content     String   @db.Text
+  generatedAt DateTime @default(now())
+  intervalNum Int
+}
+
+model KeyPoint {
+  id          String   @id @default(cuid())
+  sessionId   String
+  session     Session  @relation(fields: [sessionId], references: [id])
+  point       String
+  importance  Int      @default(1)
+  generatedAt DateTime @default(now())
+}
