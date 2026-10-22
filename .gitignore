@@ -19,6 +19,7 @@
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
@@ -42,3 +43,10 @@ next-env.d.ts
 
 # uploaded session files
 /uploads
+
+# AI assistant files
+.claude/
+CLAUDE.md
+AGENTS.md
+.agents/
+skills-lock.json
